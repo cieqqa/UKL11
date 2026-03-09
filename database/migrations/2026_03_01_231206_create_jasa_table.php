@@ -15,7 +15,6 @@ return new class extends Migration
             $table->text('alamat');
             $table->string('kota');
 
-            $table->unsignedBigInteger('id_kategori');
             $table->foreignId('id_kategori')
                 ->constrained('kategori')
                 ->onDelete('cascade');
@@ -24,7 +23,8 @@ return new class extends Migration
             $table->string('estimasi_harga');
             $table->string('kontak');
 
-            $table->enum('status_verif', ['pending','disetujui','ditolak'])->default('pending');
+            $table->enum('status_verif', ['pending','disetujui','ditolak'])
+                ->default('pending');
 
             $table->string('foto')->nullable();
             $table->float('rating')->default(0);

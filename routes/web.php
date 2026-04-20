@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JasaController;
+use App\Models\Jasa;
 
-Route::get('/', [JasaController::class, 'index']);
-Route::get('/jasa/add', [JasaController::class, 'add']);
-Route::post('/jasa/store', [JasaController::class, 'store']);
-Route::get('/jasa/edit/{id}', [JasaController::class, 'edit']);  
-Route::post('/jasa/update/{id}', [JasaController::class, 'update']); 
-Route::get('/jasa/delete/{id}', [JasaController::class, 'destroy']); 
+Route::get('/', function () {
+    $jasa = Jasa::with('kategori')->latest()->get();
+    return view('home.index', compact('jasa'));
+});
+Route::resource('jasa', JasaController::class);
+Route::resource('jasa', JasaController::class)->except(['show']);

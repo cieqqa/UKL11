@@ -504,7 +504,7 @@
                 <a href="#services">Services</a>
                 <a href="#vendors">Find Vendors</a>
                 <a href="#contact">Contact</a>
-                <a href="{{ url('/jasa/add') }}" class="pill">Dashboard</a>
+                <a href="{{ url('/jasa') }}" class="pill">Dashboard</a>
             </nav>
         </div>
     </header>

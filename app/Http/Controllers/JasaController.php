@@ -8,21 +8,24 @@ use App\Models\Kategori;
 
 class JasaController extends Controller
 {
-    // List data jasa
     public function index()
     {
         $jasa = Jasa::with('kategori')->get();
-        return view('ukl11.index', compact('jasa'));
+        return view('jasa.index', compact('jasa'));
     }
 
-    // Form tambah jasa
-    public function add()
+    public function create()
     {
         $kategori = Kategori::all();
-        return view('ukl11.add', compact('kategori'));
+        return view('jasa.create', compact('kategori'));
     }
 
-    // Simpan data
+    public function show($id)
+    {
+        $jasa = Jasa::with('kategori')->findOrFail($id);
+        return view('jasa.show', compact('jasa'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -47,18 +50,16 @@ class JasaController extends Controller
             'rating'         => 0
         ]);
 
-        return redirect('/')->with('success', 'Jasa berhasil ditambahkan!');
+        return redirect('/jasa')->with('success', 'Data berhasil ditambahkan');
     }
 
-    // Edit
     public function edit($id)
     {
         $jasa = Jasa::findOrFail($id);
         $kategori = Kategori::all();
-        return view('ukl11.edit', compact('jasa','kategori'));
+        return view('jasa.edit', compact('jasa','kategori'));
     }
 
-    // Update
     public function update(Request $request, $id)
     {
         $jasa = Jasa::findOrFail($id);
@@ -73,13 +74,12 @@ class JasaController extends Controller
             'kontak'         => $request->kontak,
         ]);
 
-        return redirect('/')->with('success', 'Jasa berhasil diupdate!');
+        return redirect('/jasa')->with('success', 'Jasa berhasil diupdate!');
     }
-
-    // Hapus
+    
     public function destroy($id)
     {
         Jasa::findOrFail($id)->delete();
-        return redirect('/')->with('success', 'Jasa berhasil dihapus!');
+        return redirect('/jasa')->with('success', 'Jasa berhasil dihapus!');
     }
 }

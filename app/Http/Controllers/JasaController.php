@@ -14,6 +14,7 @@ class JasaController extends Controller
         return view('jasa.index', compact('jasa'));
     }
 
+
     public function create()
     {
         $kategori = Kategori::all();
@@ -50,14 +51,15 @@ class JasaController extends Controller
             'rating'         => 0
         ]);
 
-        return redirect('/jasa')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('jasa.index')
+            ->with('success', 'Data berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $jasa = Jasa::findOrFail($id);
         $kategori = Kategori::all();
-        return view('jasa.edit', compact('jasa','kategori'));
+        return view('jasa.edit', compact('jasa', 'kategori'));
     }
 
     public function update(Request $request, $id)
@@ -74,12 +76,15 @@ class JasaController extends Controller
             'kontak'         => $request->kontak,
         ]);
 
-        return redirect('/jasa')->with('success', 'Jasa berhasil diupdate!');
+        return redirect()->route('jasa.index')
+            ->with('success', 'Jasa berhasil diupdate!');
     }
-    
+
     public function destroy($id)
     {
         Jasa::findOrFail($id)->delete();
-        return redirect('/jasa')->with('success', 'Jasa berhasil dihapus!');
+
+        return redirect()->route('jasa.index')
+            ->with('success', 'Jasa berhasil dihapus!');
     }
 }

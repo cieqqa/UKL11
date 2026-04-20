@@ -101,12 +101,10 @@
             <tr>
                 <td>Kategori</td>
                 <td>
-                    <select name="id_kategori" required>
-                        @foreach($kategori as $k)
-                            <option value="{{ $k->id }}">
-                                {{ $k->nama_kategori }}
-                            </option>
-                        @endforeach
+                    <select name="id_kategori">
+                    @foreach($kategori as $k)
+                    <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                    @endforeach
                     </select>
                 </td>
             </tr>

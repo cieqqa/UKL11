@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\KategoriController;
 use App\Models\Jasa;
+use App\Models\Kategori;
 
 // ✅ HOME
 Route::get('/', function () {
@@ -14,12 +15,19 @@ Route::get('/', function () {
 // ✅ ADMIN
 Route::prefix('admin')->group(function () {
 
-    // Dashboard utama
     Route::get('/', function () {
-        return view('admin.dashboard');
+        $jasa = Jasa::with('kategori')->get();
+        $kategori = Kategori::all();
+
+        $stats = [
+            'totalJasa' => Jasa::count(),
+            'totalKategori' => Kategori::count(),
+        ];
+
+        return view('admin.dashboard', compact('jasa', 'kategori', 'stats'));
     });
 
-    // CRUD
+    // ✅ CRUD
     Route::resource('jasa', JasaController::class);
     Route::resource('kategori', KategoriController::class);
 });

@@ -75,7 +75,7 @@
 
 <div class="container">
 
-    <a href="/jasa" class="back">← Kembali</a>
+  <a href="{{ route('jasa.index') }}">← Kembali</a>
 
     <h3>Tambah Data Jasa</h3>
 

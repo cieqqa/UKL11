@@ -28,7 +28,7 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
-        return redirect('/admin/kategori');
+        return redirect('/admin')->with('success', 'Kategori berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -45,12 +45,12 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
-        return redirect('/admin/kategori');
+        return redirect('/admin')->with('success', 'Kategori berhasil diupdate');
     }
 
     public function destroy($id)
     {
         Kategori::findOrFail($id)->delete();
-        return redirect('/admin/kategori');
+        return redirect('/admin')->with('success', 'Kategori berhasil dihapus');
     }
 }

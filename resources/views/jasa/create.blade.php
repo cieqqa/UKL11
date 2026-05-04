@@ -75,11 +75,11 @@
 
 <div class="container">
 
-  <a href="{{ route('jasa.index') }}">← Kembali</a>
+    <a href="/admin">← Kembali</a>
 
     <h3>Tambah Data Jasa</h3>
 
-    <form action="{{ route('jasa.store') }}" method="POST">
+    <form action="{{ route('jasa.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <table>
@@ -122,6 +122,11 @@
             <tr>
                 <td>Kontak</td>
                 <td><input type="text" name="kontak" required></td>
+            </tr>
+
+            <tr>
+                <td>Foto</td>
+                <td><input type="file" name="foto" accept="image/*"></td>
             </tr>
 
             <tr>

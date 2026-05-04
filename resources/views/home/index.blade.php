@@ -489,7 +489,49 @@
         ['name' => 'Pool Maintenance', 'color' => '#60a5fa', 'code' => 'PM'],
     ];
 
-    $featured = $jasa->take(4);
+    // gunakan data dari database jika ada, kalau tidak pakai fallback default
+    if (isset($jasa) && $jasa->count() > 0) {
+        $featured = $jasa->take(4);
+    } else {
+        $featured = [
+            (object)[
+                'nama_usaha' => 'PT Bersih Sejahtera',
+                'rating' => 4.8,
+                'estimasi_harga' => 150000,
+                'kota' => 'Jakarta',
+                'status_verif' => 'verified',
+                'deskripsi' => 'Layanan pembersihan profesional terbaik',
+                'kategori' => (object)['nama_kategori' => 'General Cleaning']
+            ],
+            (object)[
+                'nama_usaha' => 'CV Rumah Cemerlang',
+                'rating' => 4.9,
+                'estimasi_harga' => 200000,
+                'kota' => 'Bandung',
+                'status_verif' => 'verified',
+                'deskripsi' => 'Deep cleaning dengan teknologi terkini',
+                'kategori' => (object)['nama_kategori' => 'Deep Cleaning']
+            ],
+            (object)[
+                'nama_usaha' => 'Budi Cooling Service',
+                'rating' => 4.7,
+                'estimasi_harga' => 250000,
+                'kota' => 'Surabaya',
+                'status_verif' => 'verified',
+                'deskripsi' => 'Servis AC termurah dan terpercaya',
+                'kategori' => (object)['nama_kategori' => 'AC Service']
+            ],
+            (object)[
+                'nama_usaha' => 'Toko Sofa Siap',
+                'rating' => 4.6,
+                'estimasi_harga' => 300000,
+                'kota' => 'Medan',
+                'status_verif' => 'verified',
+                'deskripsi' => 'Pembersihan sofa dan karpet berkualitas',
+                'kategori' => (object)['nama_kategori' => 'Sofa and Carpet']
+            ]
+        ];
+    }
 @endphp
 
     <header class="topbar">
@@ -537,6 +579,8 @@
             </div>
         </div>
     </section>
+
+   <!-- Card 1 -->
 
     <section class="section vendors-wrap" id="vendors">
         <div class="wrap">

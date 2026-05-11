@@ -259,6 +259,17 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .vendor-link {
+            display: block;
+            color: inherit;
+        }
+
+        .vendor-link:hover .vendor-card {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 45px rgba(17, 44, 101, 0.18);
         }
 
         .vendor-photo {
@@ -625,26 +636,51 @@
 
             <div class="vendor-grid">
                 @forelse ($featured as $v)
-                    <article class="vendor-card">
-                        <div class="vendor-photo">
-                            <span class="vendor-tag">Top Rated</span>
-                        </div>
-                        <div class="vendor-body">
-                            <h3 class="vendor-title">{{ $v->nama_usaha }}</h3>
-                            <div class="vendor-meta">
-                                <span>Rating {{ number_format($v->rating, 1) }}</span>
-                                <span>Rp {{ number_format($v->estimasi_harga, 0, ',', '.') }}</span>
+                    @if (!empty($v->id))
+                        <a href="{{ route('vendors.show', $v->id) }}" class="vendor-link">
+                            <article class="vendor-card">
+                                <div class="vendor-photo">
+                                    <span class="vendor-tag">Top Rated</span>
+                                </div>
+                                <div class="vendor-body">
+                                    <h3 class="vendor-title">{{ $v->nama_usaha }}</h3>
+                                    <div class="vendor-meta">
+                                        <span>Rating {{ number_format($v->rating, 1) }}</span>
+                                        <span>Rp {{ number_format($v->estimasi_harga, 0, ',', '.') }}</span>
+                                    </div>
+                                    <div class="vendor-meta">
+                                        <span>{{ $v->kota }}</span>
+                                        <span>{{ ucfirst($v->status_verif) }}</span>
+                                    </div>
+                                    <div class="vendor-chips">
+                                        <span class="chip">{{ $v->kategori->nama_kategori ?? 'Umum' }}</span>
+                                        <span class="chip">{{ \Illuminate\Support\Str::limit($v->deskripsi, 18) }}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    @else
+                        <article class="vendor-card">
+                            <div class="vendor-photo">
+                                <span class="vendor-tag">Top Rated</span>
                             </div>
-                            <div class="vendor-meta">
-                                <span>{{ $v->kota }}</span>
-                                <span>{{ ucfirst($v->status_verif) }}</span>
+                            <div class="vendor-body">
+                                <h3 class="vendor-title">{{ $v->nama_usaha }}</h3>
+                                <div class="vendor-meta">
+                                    <span>Rating {{ number_format($v->rating, 1) }}</span>
+                                    <span>Rp {{ number_format($v->estimasi_harga, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="vendor-meta">
+                                    <span>{{ $v->kota }}</span>
+                                    <span>{{ ucfirst($v->status_verif) }}</span>
+                                </div>
+                                <div class="vendor-chips">
+                                    <span class="chip">{{ $v->kategori->nama_kategori ?? 'Umum' }}</span>
+                                    <span class="chip">{{ \Illuminate\Support\Str::limit($v->deskripsi, 18) }}</span>
+                                </div>
                             </div>
-                            <div class="vendor-chips">
-                                <span class="chip">{{ $v->kategori->nama_kategori ?? 'Umum' }}</span>
-                                <span class="chip">{{ \Illuminate\Support\Str::limit($v->deskripsi, 18) }}</span>
-                            </div>
-                        </div>
-                    </article>
+                        </article>
+                    @endif
                 @empty
                     <article class="vendor-card">
                         <div class="vendor-photo"><span class="vendor-tag">Top Rated</span></div>

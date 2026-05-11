@@ -6,7 +6,7 @@ use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-class KategoriApiController extends Controller
+class KategoriAPIController extends Controller
 {
     /**
      * Display a listing of the resource.

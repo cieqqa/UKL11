@@ -6,16 +6,34 @@ use App\Http\Controllers\KategoriController;
 use App\Models\Jasa;
 use App\Models\Kategori;
 
-// ✅ HOME
+// =========================
+// HOME
+// =========================
 Route::get('/', function () {
+
     $jasa = Jasa::with('kategori')->latest()->get();
+
     return view('home.index', compact('jasa'));
+
 });
 
-// ✅ ADMIN
-Route::prefix('admin')->group(function () {
+// =========================
+// DASHBOARD USER
+// =========================
+Route::get('/dashboard', function () {
 
+    return view('user.dashboard');
+
+})->middleware(['auth'])->name('dashboard');
+
+// =========================
+// DASHBOARD ADMIN
+// =========================
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+
+    // HALAMAN ADMIN
     Route::get('/', function () {
+
         $jasa = Jasa::with('kategori')->get();
         $kategori = Kategori::all();
 
@@ -24,10 +42,41 @@ Route::prefix('admin')->group(function () {
             'totalKategori' => Kategori::count(),
         ];
 
-        return view('admin.dashboard', compact('jasa', 'kategori', 'stats'));
+        return view('admin.dashboard', compact(
+            'jasa',
+            'kategori',
+            'stats'
+        ));
+
     });
 
-    // ✅ CRUD
+    // CRUD JASA
     Route::resource('jasa', JasaController::class);
+
+    // CRUD KATEGORI
     Route::resource('kategori', KategoriController::class);
+
 });
+
+// =========================
+// REDIRECT ROLE LOGIN
+// =========================
+
+Route::get('/redirect', function () {
+
+    if(auth()->user()->role == 'admin'){
+
+        return redirect('/admin');
+
+    }else{
+
+        return redirect('/dashboard');
+
+    }
+
+})->middleware('auth');
+
+// =========================
+// AUTH BREEZE
+// =========================
+require __DIR__.'/auth.php';

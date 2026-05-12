@@ -546,7 +546,41 @@
                 <a href="#services">Services</a>
                 <a href="#vendors">Find Vendors</a>
                 <a href="#contact">Contact</a>
-               <a href="{{ url('/admin') }}" class="pill">Dashboard</a>
+               @auth
+
+    @if(auth()->user()->role == 'admin')
+
+        <a href="/admin" class="pill">
+            Dashboard
+        </a>
+
+    @else
+
+        <a href="/dashboard" class="pill">
+            Dashboard
+        </a>
+
+    @endif
+
+    <form method="POST"
+          action="{{ route('logout') }}"
+          style="display:inline;">
+
+        @csrf
+
+        <button type="submit" class="pill">
+            Logout
+        </button>
+
+    </form>
+
+@else
+
+    <a href="/login" class="pill">
+        Login
+    </a>
+
+@endauth
             </nav>
         </div>
     </header>

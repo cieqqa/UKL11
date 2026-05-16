@@ -27,7 +27,7 @@ Route::get('/vendors/{jasa}', function (Jasa $jasa) {
 Route::get('/book/{jasa}', function (Jasa $jasa) {
     $jasa->load('kategori');
     return view('home.book', compact('jasa'));
-})->name('book.create');
+})->middleware('auth')->name('book.create');
 
 // Handle booking submission (simple placeholder - adjust to store in DB)
 Route::post('/book', function (Request $request) {

@@ -44,12 +44,13 @@
         }
 
         .topbar {
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid var(--line);
-            backdrop-filter: blur(6px);
+            background: rgba(8, 20, 58, 0.92);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
             position: sticky;
             top: 0;
             z-index: 20;
+            box-shadow: 0 12px 40px rgba(2, 18, 65, 0.12);
         }
 
         .topbar .wrap {
@@ -67,38 +68,51 @@
             font-family: 'Manrope', sans-serif;
             font-weight: 800;
             font-size: 21px;
+            color: #fff;
         }
 
         .brand-mark {
-            width: 34px;
-            height: 34px;
-            border-radius: 11px;
-            background: linear-gradient(135deg, #2b65f5, #1143ca);
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #52c7ff, #4b59ff);
             display: grid;
             place-items: center;
             color: #fff;
             font-size: 14px;
             font-weight: 800;
+            box-shadow: 0 12px 30px rgba(31, 83, 215, 0.28);
         }
 
         .menu {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 22px;
             font-size: 14px;
-            color: var(--muted);
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .menu a {
+            transition: color .2s ease;
         }
 
         .menu a:hover {
-            color: var(--primary);
+            color: #fff;
         }
 
         .menu .pill {
-            background: var(--primary);
+            background: rgba(255, 255, 255, 0.14);
             color: #fff;
-            padding: 10px 16px;
-            border-radius: 12px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
             font-weight: 700;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .menu .pill:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.22);
         }
 
         .hero {
@@ -214,31 +228,39 @@
         }
 
         .service-item {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(31, 83, 215, 0.1);
+            border-radius: 24px;
             text-align: center;
-            padding: 18px 12px;
-            box-shadow: 0 1px 0 rgba(8, 27, 74, 0.02);
+            padding: 24px 18px;
+            box-shadow: 0 24px 60px rgba(31, 83, 215, 0.08);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(31, 83, 215, 0.14);
         }
 
         .service-mark {
-            width: 36px;
-            height: 36px;
-            margin: 0 auto 10px;
-            border-radius: 10px;
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 14px;
+            border-radius: 16px;
             display: grid;
             place-items: center;
             color: #fff;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
         }
 
         .service-item span {
             display: block;
-            font-size: 13px;
-            color: #2f3f5f;
-            font-weight: 600;
+            font-size: 14px;
+            color: #142b5b;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         .vendors-wrap {
@@ -254,12 +276,12 @@
         }
 
         .vendor-card {
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(31, 83, 215, 0.1);
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform .2s ease, box-shadow .2s ease;
+            box-shadow: 0 24px 50px rgba(22, 65, 142, 0.08);
+            transition: transform .25s ease, box-shadow .25s ease;
         }
 
         .vendor-link {
@@ -268,18 +290,27 @@
         }
 
         .vendor-link:hover .vendor-card {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 45px rgba(17, 44, 101, 0.18);
+            transform: translateY(-10px);
+            box-shadow: 0 36px 70px rgba(22, 65, 142, 0.16);
         }
 
         .vendor-photo {
-            height: 150px;
-            background: linear-gradient(130deg, #b9c8e8, #94a9d5);
+            height: 170px;
+            background: linear-gradient(135deg, rgba(13, 48, 122, 0.95), rgba(56, 100, 226, 0.95));
             position: relative;
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
-            padding: 10px;
+            padding: 16px;
+        }
+
+        .vendor-photo::before {
+            content: "";
+            position: absolute;
+            inset: 20px 20px 20px 20px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            pointer-events: none;
         }
 
         .vendor-tag {
@@ -318,12 +349,13 @@
         }
 
         .chip {
-            background: #edf3ff;
-            color: #395289;
-            border-radius: 8px;
-            padding: 4px 8px;
+            background: rgba(14, 43, 100, 0.08);
+            color: #163a7a;
+            border-radius: 999px;
+            padding: 6px 12px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            border: 1px solid rgba(14, 43, 100, 0.12);
         }
 
         .align-center {
@@ -485,22 +517,34 @@
 </head>
 <body>
 @php
-    $services = [
-        ['name' => 'General Cleaning', 'color' => '#3b82f6', 'code' => 'GC'],
-        ['name' => 'Deep Cleaning', 'color' => '#9333ea', 'code' => 'DC'],
-        ['name' => 'AC Service', 'color' => '#06b6d4', 'code' => 'AC'],
-        ['name' => 'Hydro Cleaning', 'color' => '#14b8a6', 'code' => 'HC'],
-        ['name' => 'Sofa and Carpet', 'color' => '#f97316', 'code' => 'SC'],
-        ['name' => 'Ironing Service', 'color' => '#ec4899', 'code' => 'IS'],
-        ['name' => 'Steam Cleaning', 'color' => '#6366f1', 'code' => 'ST'],
-        ['name' => 'Pest Control', 'color' => '#ef4444', 'code' => 'PC'],
-        ['name' => 'Car Cleaning', 'color' => '#22c55e', 'code' => 'CC'],
-        ['name' => 'Disinfection', 'color' => '#eab308', 'code' => 'DI'],
-        ['name' => 'Marble Polishing', 'color' => '#64748b', 'code' => 'MP'],
-        ['name' => 'Pool Maintenance', 'color' => '#60a5fa', 'code' => 'PM'],
-    ];
+    $palette = ['#3b82f6', '#9333ea', '#06b6d4', '#14b8a6', '#f97316', '#ec4899', '#6366f1', '#ef4444', '#22c55e', '#eab308', '#64748b', '#60a5fa'];
+    $services = [];
 
-    // gunakan data dari database jika ada, kalau tidak pakai fallback default
+    if (isset($kategori) && $kategori->count() > 0) {
+        foreach ($kategori as $index => $kat) {
+            $parts = preg_split('/\s+/', trim($kat->nama_kategori));
+            $code = '';
+            foreach ($parts as $part) {
+                if ($part !== '') {
+                    $code .= strtoupper(substr($part, 0, 1));
+                    if (strlen($code) >= 2) {
+                        break;
+                    }
+                }
+            }
+
+            if ($code === '') {
+                $code = strtoupper(substr($kat->nama_kategori, 0, 2));
+            }
+
+            $services[] = [
+                'name' => $kat->nama_kategori,
+                'color' => $palette[$index % count($palette)],
+                'code' => $code,
+            ];
+        }
+    }
+
     if (isset($jasa) && $jasa->count() > 0) {
         $featured = $jasa->take(4);
     } else {
@@ -557,41 +601,16 @@
                 <a href="#services">Services</a>
                 <a href="#vendors">Find Vendors</a>
                 <a href="#contact">Contact</a>
-               @auth
 
-    @if(auth()->user()->role == 'admin')
-
-        <a href="/admin" class="pill">
-            Dashboard
-        </a>
-
-    @else
-
-        <a href="/dashboard" class="pill">
-            Dashboard
-        </a>
-
-    @endif
-
-    <form method="POST"
-          action="{{ route('logout') }}"
-          style="display:inline;">
-
-        @csrf
-
-        <button type="submit" class="pill">
-            Logout
-        </button>
-
-    </form>
-
-@else
-
-    <a href="/login" class="pill">
-        Login
-    </a>
-
-@endauth
+                @auth
+                    @if(auth()->user()->role === 'admin')
+                        <a href="/admin" class="pill">Dashboard</a>
+                    @else
+                        <a href="/dashboard" class="pill">Dashboard</a>
+                    @endif
+                @else
+                    <a href="/login" class="pill">Login</a>
+                @endauth
             </nav>
         </div>
     </header>
@@ -607,6 +626,7 @@
         </div>
     </section>
 
+@if (!empty($services))
     <section class="section" id="services">
         <div class="wrap">
             <div class="section-head">
@@ -624,6 +644,7 @@
             </div>
         </div>
     </section>
+@endif
 
    <!-- Card 1 -->
 

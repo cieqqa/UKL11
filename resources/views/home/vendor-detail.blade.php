@@ -38,12 +38,13 @@
         }
 
         .topbar {
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom: 1px solid var(--line);
-            backdrop-filter: blur(6px);
+            background: rgba(10, 20, 60, 0.96);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
             position: sticky;
             top: 0;
             z-index: 20;
+            box-shadow: 0 16px 40px rgba(7, 18, 52, 0.22);
         }
 
         .topbar .wrap {
@@ -51,6 +52,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 18px;
         }
 
         .brand {
@@ -58,59 +60,72 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            color: inherit;
+            color: #fff;
             font-family: 'Manrope', sans-serif;
             font-size: 22px;
             font-weight: 800;
         }
 
         .brand-mark {
-            width: 34px;
-            height: 34px;
-            border-radius: 11px;
-            background: linear-gradient(135deg, #2f6af7, #1145cb);
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #52c7ff, #4b59ff);
             display: grid;
             place-items: center;
             color: #fff;
             font-size: 14px;
             font-weight: 800;
+            box-shadow: 0 12px 32px rgba(37, 111, 233, 0.24);
         }
 
         .menu {
             display: flex;
-            gap: 24px;
+            gap: 22px;
             align-items: center;
-            color: var(--muted);
+            color: rgba(255, 255, 255, 0.78);
             font-size: 14px;
         }
 
         .menu a {
             text-decoration: none;
             color: inherit;
+            transition: color .2s ease;
+        }
+
+        .menu a:hover {
+            color: #fff;
         }
 
         .menu .pill {
-            background: var(--brand);
+            background: rgba(255, 255, 255, 0.14);
             color: #fff;
-            padding: 10px 16px;
-            border-radius: 12px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
             font-weight: 700;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .menu .pill:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.22);
         }
 
         .hero {
             margin-top: 14px;
-            height: 210px;
+            height: 240px;
             border-radius: 0;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(120deg, #3d4d67 0, #1e2d4a 54%, #415987 100%);
+            background: linear-gradient(120deg, #2244a1 0, #1b336c 35%, #2d4da4 100%);
         }
 
         .hero::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.12));
+            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.16), transparent 35%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1), transparent 25%);
         }
 
         .hero-photo {
@@ -122,20 +137,20 @@
 
         .card {
             width: min(980px, 92%);
-            margin: -46px auto 0;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
+            margin: -56px auto 0;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(37, 111, 233, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 28px 80px rgba(21, 65, 148, 0.12);
             position: relative;
             z-index: 4;
-            padding: 18px;
+            padding: 26px;
         }
 
         .card-head {
             display: flex;
             justify-content: space-between;
-            gap: 14px;
+            gap: 18px;
             flex-wrap: wrap;
         }
 
@@ -156,40 +171,47 @@
         }
 
         .badge {
-            background: #f4b400;
-            color: #fff;
+            background: rgba(39, 121, 255, 0.12);
+            color: #1f3c8c;
             border-radius: 999px;
-            padding: 5px 10px;
-            font-size: 11px;
+            padding: 7px 12px;
+            font-size: 12px;
             font-weight: 700;
         }
 
         .actions {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            min-width: 180px;
+            gap: 12px;
+            min-width: 190px;
         }
 
         .btn {
             border: 1px solid transparent;
-            border-radius: 12px;
-            padding: 11px 15px;
+            border-radius: 999px;
+            padding: 14px 20px;
             text-align: center;
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(37, 111, 233, 0.16);
         }
 
         .btn-solid {
-            background: var(--brand);
+            background: linear-gradient(135deg, #3f7cff, #1f4dd2);
             color: #fff;
+            border-color: transparent;
         }
 
         .btn-outline {
-            border-color: var(--brand);
-            color: var(--brand);
-            background: #fff;
+            border-color: rgba(37, 111, 233, 0.2);
+            color: #1f4dd2;
+            background: rgba(255,255,255,0.88);
         }
 
         .desc {
@@ -336,7 +358,16 @@
                 <a href="{{ route('home') }}#services">Services</a>
                 <a href="{{ route('home') }}#vendors">Find Vendors</a>
                 <a href="{{ route('home') }}#contact">Contact</a>
-                <a href="{{ url('/admin') }}" class="pill">Dashboard</a>
+
+                @auth
+                    @if(auth()->user()->role === 'admin')
+                        <a href="{{ url('/admin') }}" class="pill">Dashboard</a>
+                    @else
+                        <a href="{{ route('dashboard') }}" class="pill">Dashboard</a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="pill">Login</a>
+                @endauth
             </nav>
         </div>
     </header>
@@ -359,7 +390,11 @@
                 </div>
             </div>
             <div class="actions">
-                <a href="{{ route('book.create', $jasa->id) }}" class="btn btn-solid">Book Now</a>
+                @auth
+                    <a href="{{ route('book.create', $jasa->id) }}" class="btn btn-solid">Book Now</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline">Login to Book</a>
+                @endauth
             </div>
         </div>
 

@@ -13,8 +13,9 @@ use App\Models\Kategori;
 Route::get('/', function () {
 
     $jasa = Jasa::with('kategori')->latest()->get();
+    $kategori = Kategori::all();
 
-    return view('home.index', compact('jasa'));
+    return view('home.index', compact('jasa', 'kategori'));
 })->name('home');
 
 Route::get('/vendors/{jasa}', function (Jasa $jasa) {

@@ -598,10 +598,8 @@
 
             <nav class="menu">
                 <a href="#">Home</a>
-                <a href="#services">Services</a>
-                <a href="#vendors">Find Vendors</a>
-                <a href="#contact">Contact</a>
-
+                <a href="{{ route('services.index') }}">Services</a>
+                <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 @auth
                     @if(auth()->user()->role === 'admin')
                         <a href="/admin" class="pill">Dashboard</a>
@@ -620,8 +618,8 @@
             <h1>Your Trusted Marketplace for<br>Cleaning and Maintenance Services</h1>
             <p>Connect with verified, professional service providers in your area. Compare, chat, and book with confidence.</p>
             <div class="hero-actions">
-                <a href="#services" class="btn btn-solid">Find Services</a>
-                <a href="#vendors" class="btn btn-ghost">Browse Vendors</a>
+                <a href="{{ route('services.index') }}" class="btn btn-solid">Find Services</a>
+                <a href="{{ route('vendors.index') }}" class="btn btn-ghost">Browse Vendors</a>
             </div>
         </div>
     </section>
@@ -716,7 +714,7 @@
             </div>
 
             <div class="align-center" style="margin-top: 26px;">
-                <a href="{{ url('/jasa/add') }}" class="btn" style="background:#2862e0;color:#fff;border-color:#2862e0;">View All Vendors</a>
+                <a href="{{ route('vendors.index') }}" class="btn" style="background:#2862e0;color:#fff;border-color:#2862e0;">View All Vendors</a>
             </div>
         </div>
     </section>
@@ -786,7 +784,7 @@
             <h2>Ready to Get Started?</h2>
             <p>Join satisfied customers who trust Klik n Clean for cleaning and maintenance needs.</p>
             <div class="hero-actions" style="margin-top:24px;">
-                <a href="#services" class="btn btn-solid">Find Your Service Now</a>
+                <a href="{{ route('services.index') }}" class="btn btn-solid">Find Your Service Now</a>
             </div>
         </div>
     </section>
@@ -801,8 +799,8 @@
             <div>
                 <h4>Quick Links</h4>
                 <a href="#">Home</a>
-                <a href="#services">Browse Services</a>
-                <a href="#vendors">Find Vendors</a>
+                <a href="{{ route('services.index') }}">Browse Services</a>
+                <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 <a href="{{ url('/jasa/add') }}">Book Now</a>
             </div>
 

@@ -356,7 +356,7 @@
             <nav class="menu">
                 <a href="{{ route('home') }}">Home</a>
                 <a href="{{ route('home') }}#services">Services</a>
-                <a href="{{ route('home') }}#vendors">Find Vendors</a>
+                <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 <a href="{{ route('home') }}#contact">Contact</a>
 
                 @auth
@@ -395,6 +395,7 @@
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline">Login to Book</a>
                 @endauth
+                <button onclick="window.history.back()" class="btn btn-outline">← Kembali ke Featured Vendors</button>
             </div>
         </div>
 
@@ -445,7 +446,6 @@
     </section>
 
     <div class="back">
-        <a href="{{ route('home') }}#vendors">← Kembali ke Featured Vendors</a>
     </div>
 </body>
 </html>

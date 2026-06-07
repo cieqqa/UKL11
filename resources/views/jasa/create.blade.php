@@ -1,144 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Tambah Jasa</title>
-
     <style>
         body {
-            background: #eef4ff;
-            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #0f172a;
         }
 
-        .container {
-            width: 500px;
-            margin: 50px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .page {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 0 18px 40px;
         }
 
-        h3 {
-            text-align: center;
-            color: #1e3a8a;
-            margin-bottom: 20px;
+        .card {
+            background: #fff;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+            padding: 32px;
         }
 
-        table {
-            width: 100%;
+        .header {
+            margin-bottom: 24px;
         }
 
-        td {
-            padding: 8px 5px;
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: -0.02em;
         }
 
-        input, textarea, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            outline: none;
+        .header p {
+            margin: 10px 0 0;
+            color: #475569;
+            line-height: 1.75;
         }
 
-        input:focus, textarea:focus, select:focus {
-            border-color: #2563eb;
-        }
-
-        button {
-            background: #2563eb;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 15px;
+        .back-link {
+            display: inline-flex;
+            margin-bottom: 22px;
             color: #2563eb;
+            font-weight: 600;
             text-decoration: none;
         }
 
-        .back:hover {
+        .back-link:hover {
             text-decoration: underline;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            min-height: 44px;
+            border-radius: 14px;
+            border: 1px solid #cbd5e1;
+            padding: 12px 14px;
+            font-size: 15px;
+            color: #0f172a;
+            outline: none;
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        .error-box {
+            background: #fef3f2;
+            border: 1px solid #fbc8c4;
+            color: #991b1b;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .16s ease, box-shadow .16s ease;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-
 <body>
+    <div class="page">
+        <div class="back-link" onclick="window.location.href='/admin'">← Kembali ke Dashboard</div>
+        <div class="card">
+            <div class="header">
+                <h1>Tambah Jasa</h1>
+                <p>Lengkapi informasi layanan baru agar bisa tampil di daftar jasa admin.</p>
+            </div>
 
-<div class="container">
+            @if ($errors->any())
+                <div class="error-box">
+                    <strong>Periksa kembali data yang dimasukkan:</strong>
+                    <ul style="margin: 12px 0 0 18px; padding: 0;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-    <a href="/admin">← Kembali</a>
+            <form action="{{ route('jasa.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="nama_usaha">Nama Usaha</label>
+                        <input id="nama_usaha" type="text" name="nama_usaha" value="{{ old('nama_usaha') }}" required>
+                    </div>
 
-    <h3>Tambah Data Jasa</h3>
+                    <div class="field">
+                        <label for="alamat">Alamat</label>
+                        <input id="alamat" type="text" name="alamat" value="{{ old('alamat') }}" required>
+                    </div>
 
-    <form action="{{ route('jasa.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+                    <div class="field">
+                        <label for="kota">Kota</label>
+                        <input id="kota" type="text" name="kota" value="{{ old('kota') }}" required>
+                    </div>
 
-        <table>
-            <tr>
-                <td>Nama Usaha</td>
-                <td><input type="text" name="nama_usaha" required></td>
-            </tr>
+                    <div class="field">
+                        <label for="id_kategori">Kategori</label>
+                        <select id="id_kategori" name="id_kategori" required>
+                            <option value="" disabled selected>Pilih kategori</option>
+                            @foreach($kategori as $k)
+                                <option value="{{ $k->id }}" {{ old('id_kategori') == $k->id ? 'selected' : '' }}>{{ $k->nama_kategori }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <tr>
-                <td>Alamat</td>
-                <td><input type="text" name="alamat" required></td>
-            </tr>
+                    <div class="field">
+                        <label for="estimasi_harga">Estimasi Harga</label>
+                        <input id="estimasi_harga" type="number" name="estimasi_harga" value="{{ old('estimasi_harga') }}" required>
+                    </div>
 
-            <tr>
-                <td>Kota</td>
-                <td><input type="text" name="kota" required></td>
-            </tr>
+                    <div class="field">
+                        <label for="kontak">Kontak</label>
+                        <input id="kontak" type="text" name="kontak" value="{{ old('kontak') }}" required>
+                    </div>
 
-            <tr>
-                <td>Kategori</td>
-                <td>
-                    <select name="id_kategori">
-                    @foreach($kategori as $k)
-                    <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
-                    @endforeach
-                    </select>
-                </td>
-            </tr>
+                    <div class="field full-width">
+                        <label for="deskripsi">Deskripsi</label>
+                        <textarea id="deskripsi" name="deskripsi" required>{{ old('deskripsi') }}</textarea>
+                    </div>
 
-            <tr>
-                <td>Deskripsi</td>
-                <td><textarea name="deskripsi" required></textarea></td>
-            </tr>
+                    <div class="field full-width">
+                        <label for="foto">Foto (opsional)</label>
+                        <input id="foto" type="file" name="foto" accept="image/*">
+                    </div>
+                </div>
 
-            <tr>
-                <td>Estimasi Harga</td>
-                <td><input type="number" name="estimasi_harga" required></td>
-            </tr>
-
-            <tr>
-                <td>Kontak</td>
-                <td><input type="text" name="kontak" required></td>
-            </tr>
-
-            <tr>
-                <td>Foto</td>
-                <td><input type="file" name="foto" accept="image/*"></td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    <button type="submit">SIMPAN DATA</button>
-                </td>
-            </tr>
-        </table>
-
-    </form>
-
-</div>
-
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">Simpan Jasa</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin'">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

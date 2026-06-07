@@ -324,6 +324,21 @@
             font-size: 20px;
         }
 
+        .vendor-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .vendor-title a:hover {
+            text-decoration: underline;
+        }
+
+        .vendor-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
         .vendor-meta {
             display: flex;
             flex-wrap: wrap;
@@ -498,7 +513,10 @@
                     <h2 style="margin:0; font-size: 26px;">Browse Vendors</h2>
                     <p style="margin: 8px 0 0; color: var(--muted);">Scroll through trusted vendors and view full details on each listing.</p>
                 </div>
-                <a href="{{ route('vendors.index') }}?top_rated=1" class="btn btn-secondary">Top Rated</a>
+                <div class="vendor-actions">
+                    <a href="{{ route('home') }}" class="btn btn-secondary">Back Home</a>
+                    <a href="{{ route('vendors.index') }}?top_rated=1" class="btn btn-secondary">Top Rated</a>
+                </div>
             </div>
 
             <div id="vendor-list" class="vendor-grid">
@@ -508,7 +526,11 @@
                             <span class="vendor-tag">{{ (float) $vendor->rating >= 4.7 ? 'Top Rated' : 'Trusted' }}</span>
                         </div>
                         <div class="vendor-body">
-                            <h3 class="vendor-title">{{ $vendor->nama_usaha }}</h3>
+                            @auth
+                                <h3 class="vendor-title"><a href="{{ route('vendors.show', $vendor->id) }}">{{ $vendor->nama_usaha }}</a></h3>
+                            @else
+                                <h3 class="vendor-title"><a href="{{ route('login') }}">{{ $vendor->nama_usaha }}</a></h3>
+                            @endauth
                             <div class="vendor-meta">
                                 <span>Rating {{ number_format($vendor->rating ?? 0, 1) }}</span>
                                 <span>Rp {{ number_format($vendor->estimasi_harga ?? 0, 0, ',', '.') }}</span>

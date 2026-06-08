@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Jasa;
 use App\Models\Kategori;
+use App\Models\User;
 
 class JasaController extends Controller
 {
@@ -18,7 +20,8 @@ class JasaController extends Controller
     public function create()
     {
         $kategori = Kategori::all();
-        return view('jasa.create', compact('kategori'));
+        $vendors = User::where('role', 'vendor')->get();
+        return view('jasa.create', compact('kategori', 'vendors'));
     }
 
     public function show($id)
@@ -29,7 +32,8 @@ class JasaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        // base validation
+        $rules = [
             'nama_usaha'      => 'required',
             'alamat'          => 'required',
             'kota'            => 'required',
@@ -37,8 +41,43 @@ class JasaController extends Controller
             'deskripsi'       => 'required',
             'estimasi_harga'  => 'required',
             'kontak'          => 'required',
+            'owner_id'        => 'nullable|exists:users,id',
+            'vendor_name'     => 'required_without:owner_id|string|max:255',
+            'vendor_email'    => 'required_without:owner_id|email|max:255',
             'foto'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
+        ];
+
+        $request->validate($rules);
+
+        $ownerId = $request->owner_id;
+
+        // If no existing owner provided, check whether vendor email already exists
+        if (!$ownerId) {
+            $existing = User::where('email', $request->vendor_email)->first();
+            if ($existing) {
+                // if existing user is not a vendor, convert role to vendor
+                if ($existing->role !== 'vendor') {
+                    $existing->role = 'vendor';
+                    $existing->save();
+                }
+                $ownerId = $existing->id;
+            } else {
+                // new vendor must provide password
+                $request->validate([
+                    'vendor_password' => 'required|string|min:8|confirmed',
+                    'vendor_password_confirmation' => 'required_with:vendor_password|string|min:8',
+                ]);
+
+                $vendor = User::create([
+                    'name' => $request->vendor_name,
+                    'email' => $request->vendor_email,
+                    'password' => Hash::make($request->vendor_password),
+                    'role' => 'vendor',
+                ]);
+                $ownerId = $vendor->id;
+            }
+        }
+
         $data = [
             'nama_usaha'     => $request->nama_usaha,
             'alamat'         => $request->alamat,
@@ -48,7 +87,8 @@ class JasaController extends Controller
             'estimasi_harga' => $request->estimasi_harga,
             'kontak'         => $request->kontak,
             'status_verif'   => 'pending',
-            'rating'         => 0
+            'rating'         => 0,
+            'owner_id'       => $ownerId,
         ];
 
         if ($request->hasFile('foto')) {
@@ -72,7 +112,8 @@ class JasaController extends Controller
     {
         $jasa = Jasa::findOrFail($id);
         $kategori = Kategori::all();
-        return view('jasa.edit', compact('jasa', 'kategori'));
+        $vendors = User::where('role', 'vendor')->get();
+        return view('jasa.edit', compact('jasa', 'kategori', 'vendors'));
     }
 
     public function update(Request $request, $id)
@@ -87,6 +128,7 @@ class JasaController extends Controller
             'deskripsi'       => 'required',
             'estimasi_harga'  => 'required',
             'kontak'          => 'required',
+            'owner_id'        => 'required|exists:users,id',
             'foto'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -98,6 +140,7 @@ class JasaController extends Controller
             'deskripsi'      => $request->deskripsi,
             'estimasi_harga' => $request->estimasi_harga,
             'kontak'         => $request->kontak,
+            'owner_id'       => $request->owner_id,
         ];
 
         if ($request->hasFile('foto')) {

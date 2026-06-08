@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // Seed categories first
         $this->call(KategoriSeeder::class);
+        $this->call(JasaSeeder::class);
 
         User::updateOrCreate(
             ['email' => 'admin@example.com'],

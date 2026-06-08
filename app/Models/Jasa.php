@@ -28,11 +28,22 @@ class Jasa extends Model
     'kontak',
     'status_verif',
     'foto',
-    'rating'
+    'rating',
+    'owner_id'
     ];
 
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'id_kategori');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'jasa_id');
     }
 }

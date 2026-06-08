@@ -115,8 +115,87 @@
             background: rgba(255, 255, 255, 0.22);
         }
 
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s ease, background .2s ease;
+            font-size: 14px;
+        }
+
+        .dropdown-trigger:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .dropdown-trigger svg {
+            width: 16px;
+            height: 16px;
+            transition: transform .2s ease;
+        }
+
+        .dropdown-trigger[aria-expanded="true"] svg {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(8, 20, 58, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            backdrop-filter: blur(14px);
+            min-width: 180px;
+            padding: 8px 0;
+            box-shadow: 0 20px 40px rgba(2, 18, 65, 0.3);
+            z-index: 30;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 18px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color .2s ease, background .2s ease;
+            font-family: inherit;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .dropdown-menu button[type="submit"] {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ff6b6b;
+        }
+
+        .dropdown-menu button[type="submit"]:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff8787;
+        }
+
         .hero {
-            margin-top: 16px;
+            margin-top: 0;
             border-radius: 0;
             background: linear-gradient(130deg, #2062f2 0%, #1c4ed8 70%);
             color: #fff;
@@ -302,6 +381,20 @@
             align-items: flex-end;
             justify-content: flex-end;
             padding: 16px;
+        }
+
+        .vendor-photo .vendor-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .vendor-photo .vendor-tag,
+        .vendor-photo::before {
+            z-index: 2;
         }
 
         .vendor-photo::before {
@@ -514,6 +607,7 @@
             }
         }
     </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
 @php
@@ -597,15 +691,33 @@
             </a>
 
             <nav class="menu">
-                <a href="#">Home</a>
-                <a href="{{ route('services.index') }}">Services</a>
+                <a href="{{ url('/') }}">Home</a>
                 <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 @auth
-                    @if(auth()->user()->role === 'admin')
-                        <a href="/admin" class="pill">Dashboard</a>
-                    @else
-                        <a href="/dashboard" class="pill">Dashboard</a>
-                    @endif
+                    <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
+                        <button 
+                            class="dropdown-trigger" 
+                            @click="open = !open" 
+                            :aria-expanded="open"
+                        >
+                            {{ auth()->user()->name }}
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </button>
+
+                        <div class="dropdown-menu" x-show="open" x-transition>
+                            @if(auth()->user()->role === 'admin')
+                                <a href="/admin">Admin Panel</a>
+                            @else
+                                <a href="{{ url('/redirect') }}">My Dashboard</a>
+                            @endif
+                            <form method="POST" action="{{ route('logout') }}" style="display: contents;">
+                                @csrf
+                                <button type="submit">Logout</button>
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <a href="/login" class="pill">Login</a>
                 @endauth
@@ -618,31 +730,10 @@
             <h1>Your Trusted Marketplace for<br>Cleaning and Maintenance Services</h1>
             <p>Connect with verified, professional service providers in your area. Compare, chat, and book with confidence.</p>
             <div class="hero-actions">
-                <a href="{{ route('services.index') }}" class="btn btn-solid">Find Services</a>
                 <a href="{{ route('vendors.index') }}" class="btn btn-ghost">Browse Vendors</a>
             </div>
         </div>
     </section>
-
-@if (!empty($services))
-    <section class="section" id="services">
-        <div class="wrap">
-            <div class="section-head">
-                <h2>Explore Services</h2>
-                <p>Choose from our wide range of professional services</p>
-            </div>
-
-            <div class="service-grid">
-                @foreach ($services as $srv)
-                    <div class="service-item">
-                        <div class="service-mark" style="background: {{ $srv['color'] }};">{{ $srv['code'] }}</div>
-                        <span>{{ $srv['name'] }}</span>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-@endif
 
    <!-- Card 1 -->
 
@@ -656,42 +747,47 @@
             <div class="vendor-grid">
                 @forelse ($featured as $v)
                     @if (!empty($v->id))
-                        <a href="{{ route('vendors.show', $v->id) }}" class="vendor-link">
-                            <article class="vendor-card">
-                                <div class="vendor-photo">
-                                    <span class="vendor-tag">Top Rated</span>
-                                </div>
-                                <div class="vendor-body">
-                                    <h3 class="vendor-title">{{ $v->nama_usaha }}</h3>
-                                    <div class="vendor-meta">
-                                        <span>Rating {{ number_format($v->rating, 1) }}</span>
-                                        <span>Rp {{ number_format($v->estimasi_harga, 0, ',', '.') }}</span>
-                                    </div>
-                                    <div class="vendor-meta">
-                                        <span>{{ $v->kota }}</span>
-                                        <span>{{ ucfirst($v->status_verif) }}</span>
-                                    </div>
-                                    <div class="vendor-chips">
-                                        <span class="chip">{{ $v->kategori->nama_kategori ?? 'Umum' }}</span>
-                                        <span class="chip">{{ \Illuminate\Support\Str::limit($v->deskripsi, 18) }}</span>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                    @else
                         <article class="vendor-card">
                             <div class="vendor-photo">
-                                <span class="vendor-tag">Top Rated</span>
+                                @if(!empty($v->foto))
+                                    <img src="{{ asset($v->foto) }}" alt="{{ $v->nama_usaha }}" class="vendor-image">
+                                @else
+                                    <span class="vendor-tag">Top Rated</span>
+                                @endif
                             </div>
                             <div class="vendor-body">
                                 <h3 class="vendor-title">{{ $v->nama_usaha }}</h3>
                                 <div class="vendor-meta">
-                                    <span>Rating {{ number_format($v->rating, 1) }}</span>
                                     <span>Rp {{ number_format($v->estimasi_harga, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="vendor-meta">
                                     <span>{{ $v->kota }}</span>
-                                    <span>{{ ucfirst($v->status_verif) }}</span>
+                                </div>
+                                <div class="vendor-chips">
+                                    <span class="chip">{{ $v->kategori->nama_kategori ?? 'Umum' }}</span>
+                                    <span class="chip">{{ \Illuminate\Support\Str::limit($v->deskripsi, 18) }}</span>
+                                </div>
+                                <div class="vendor-footer" style="margin-top: 18px;">
+                                    <a href="{{ route('vendors.show', $v->id) }}" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </article>
+                    @else
+                        <article class="vendor-card">
+                            <div class="vendor-photo">
+                                @if(!empty($v->foto))
+                                    <img src="{{ asset($v->foto) }}" alt="{{ $v->nama_usaha }}" class="vendor-image">
+                                @else
+                                    <span class="vendor-tag">Top Rated</span>
+                                @endif
+                            </div>
+                            <div class="vendor-body">
+                                <h3 class="vendor-title">{{ $v->nama_usaha }}</h3>
+                                <div class="vendor-meta">
+                                    <span>Rp {{ number_format($v->estimasi_harga, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="vendor-meta">
+                                    <span>{{ $v->kota }}</span>
                                 </div>
                                 <div class="vendor-chips">
                                     <span class="chip">{{ $v->kategori->nama_kategori ?? 'Umum' }}</span>
@@ -784,7 +880,7 @@
             <h2>Ready to Get Started?</h2>
             <p>Join satisfied customers who trust Klik n Clean for cleaning and maintenance needs.</p>
             <div class="hero-actions" style="margin-top:24px;">
-                <a href="{{ route('services.index') }}" class="btn btn-solid">Find Your Service Now</a>
+                <a href="{{ route('vendors.index') }}" class="btn btn-solid">Browse Vendors</a>
             </div>
         </div>
     </section>
@@ -799,7 +895,6 @@
             <div>
                 <h4>Quick Links</h4>
                 <a href="#">Home</a>
-                <a href="{{ route('services.index') }}">Browse Services</a>
                 <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 <a href="{{ url('/jasa/add') }}">Book Now</a>
             </div>

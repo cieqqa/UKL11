@@ -106,9 +106,13 @@
 
         .hero-grid {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
+            grid-template-columns: 1fr;
             gap: 30px;
-            align-items: center;
+            align-items: start;
+        }
+
+        .hero-left {
+            max-width: 720px;
         }
 
         .hero-left h1 {
@@ -280,17 +284,32 @@
         .vendor-card {
             display: flex;
             flex-direction: column;
-            border-radius: 24px;
+            border-radius: 32px;
             overflow: hidden;
             background: #fff;
             border: 1px solid #edf2f7;
-            box-shadow: 0 14px 30px rgba(26, 70, 135, 0.06);
+            box-shadow: 0 20px 40px rgba(26, 70, 135, 0.08);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .vendor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 26px 56px rgba(26, 70, 135, 0.14);
         }
 
         .vendor-photo {
-            min-height: 190px;
-            background: linear-gradient(135deg, #eef6ff 0%, #fff 100%);
+            min-height: 220px;
+            background: linear-gradient(135deg, #eef6ff 0%, #f8fbff 100%);
             position: relative;
+        }
+
+        .vendor-photo .vendor-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
 
         .vendor-photo::after {
@@ -299,6 +318,10 @@
             inset: 0;
             background: url('https://images.unsplash.com/photo-1555374017-5bdc4e0a37d1?auto=format&fit=crop&w=900&q=80') center/cover no-repeat;
             opacity: 0.26;
+        }
+
+        .vendor-photo .vendor-tag {
+            z-index: 2;
         }
 
         .vendor-photo .vendor-tag {
@@ -345,12 +368,14 @@
             gap: 10px;
             color: var(--muted);
             font-size: 14px;
+            align-items: center;
         }
 
         .vendor-meta span {
-            background: var(--surface-alt);
-            padding: 9px 12px;
+            background: #f4f7fb;
+            padding: 10px 14px;
             border-radius: 14px;
+            font-weight: 600;
         }
 
         .vendor-chips {
@@ -380,6 +405,8 @@
         .vendor-footer .btn {
             width: auto;
             white-space: nowrap;
+            padding: 12px 20px;
+            border-radius: 18px;
         }
 
         .empty-state {
@@ -409,7 +436,87 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s ease, background .2s ease;
+            font-size: 14px;
+        }
+
+        .dropdown-trigger:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .dropdown-trigger svg {
+            width: 16px;
+            height: 16px;
+            transition: transform .2s ease;
+        }
+
+        .dropdown-trigger[aria-expanded="true"] svg {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(8, 20, 58, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            backdrop-filter: blur(14px);
+            min-width: 180px;
+            padding: 8px 0;
+            box-shadow: 0 20px 40px rgba(2, 18, 65, 0.3);
+            z-index: 30;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 18px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color .2s ease, background .2s ease;
+            font-family: inherit;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .dropdown-menu button[type="submit"] {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ff6b6b;
+        }
+
+        .dropdown-menu button[type="submit"]:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff8787;
+        }
     </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
     <header class="topbar">
@@ -422,11 +529,30 @@
                 <a href="{{ url('/') }}">Home</a>
                 <a href="{{ route('vendors.index') }}" class="active">Find Vendors</a>
                 @auth
-                    @if(auth()->user()->role === 'admin')
-                        <a href="/admin" class="pill">Dashboard</a>
-                    @else
-                        <a href="/dashboard" class="pill">Dashboard</a>
-                    @endif
+                    <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
+                        <button 
+                            class="dropdown-trigger" 
+                            @click="open = !open" 
+                            :aria-expanded="open"
+                        >
+                            {{ auth()->user()->name }}
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </button>
+
+                        <div class="dropdown-menu" x-show="open" x-transition>
+                            @if(auth()->user()->role === 'admin')
+                                <a href="/admin">Admin Panel</a>
+                            @else
+                                <a href="{{ url('/redirect') }}">My Dashboard</a>
+                            @endif
+                            <form method="POST" action="{{ route('logout') }}" style="display: contents;">
+                                @csrf
+                                <button type="submit">Logout</button>
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <a href="/login" class="pill">Login</a>
                 @endauth
@@ -437,31 +563,18 @@
     <section class="hero">
         <div class="wrap hero-grid">
             <div class="hero-left">
-                <h1>Find Trusted Vendors</h1>
-                <p>Browse verified service providers and compare ratings, prices, and reviews to choose the best vendor for your needs.</p>
+                <h1>Find Trusted Service Partners</h1>
+                <p>Discover professional vendors with transparent pricing, easy booking, and dependable local support.</p>
                 <form action="{{ route('vendors.index') }}" method="GET" class="search-box">
                     <input type="text" name="search" placeholder="Search vendors or services..." value="{{ old('search', $search ?? '') }}">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
-                <div class="hero-actions" style="margin-top: 18px;">
-                    <a href="{{ route('services.index') }}" class="btn btn-secondary">Browse Services</a>
-                </div>
                 @guest
                     <div style="margin-top:16px; padding:14px; border-radius:12px; background:#fff; box-shadow:var(--shadow);">
                         <p style="margin:0 0 8px;">Silakan login untuk melihat detail vendor lengkap dan melakukan pemesanan.</p>
                         <a href="{{ route('login') }}" class="btn btn-primary">Login / Register</a>
                     </div>
                 @endguest
-            </div>
-            <div class="hero-right">
-                <div class="hero-card">
-                    <h3>Why browse vendors here?</h3>
-                    <p>Use filters to narrow down the best cleaning and maintenance providers. All vendors are linked to real listings so you can view details, contact, and book instantly.</p>
-                    <div class="vendor-footer">
-                        <span class="vendor-count">{{ $vendors->count() }} vendors found</span>
-                        <a href="#vendor-list" class="btn btn-secondary">See Listings</a>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -473,32 +586,20 @@
             <form method="GET" action="{{ route('vendors.index') }}" class="filter-group">
                 <input type="hidden" name="search" value="{{ $search ?? '' }}">
 
-                <label>
-                    <input type="checkbox" name="top_rated" value="1" {{ isset($topRated) && $topRated ? 'checked' : '' }}>
-                    Top Rated Only
-                </label>
-
-                <div>
-                    <h4 style="margin: 0 0 10px; font-size: 15px;">Minimum Rating</h4>
-                    <label><input type="radio" name="rating" value="" {{ empty($rating) ? 'checked' : '' }}> All Ratings</label>
-                    <label><input type="radio" name="rating" value="4.5" {{ ($rating ?? '') === '4.5' ? 'checked' : '' }}> 4.5 & above</label>
-                    <label><input type="radio" name="rating" value="4.7" {{ ($rating ?? '') === '4.7' ? 'checked' : '' }}> 4.7 & above</label>
-                    <label><input type="radio" name="rating" value="4.8" {{ ($rating ?? '') === '4.8' ? 'checked' : '' }}> 4.8 & above</label>
-                </div>
-
                 <div>
                     <h4 style="margin: 0 0 10px; font-size: 15px;">Price Range</h4>
-                    <label><input type="radio" name="price" value="" {{ empty($price) ? 'checked' : '' }}> All Prices</label>
-                    <label><input type="radio" name="price" value="budget" {{ ($price ?? '') === 'budget' ? 'checked' : '' }}> Budget ($)</label>
-                    <label><input type="radio" name="price" value="moderate" {{ ($price ?? '') === 'moderate' ? 'checked' : '' }}> Moderate ($$)</label>
-                    <label><input type="radio" name="price" value="premium" {{ ($price ?? '') === 'premium' ? 'checked' : '' }}> Premium ($$$)</label>
+                    <label><input type="radio" name="price" value="" {{ empty($price) ? 'checked' : '' }}> Semua Harga</label>
+                    <label><input type="radio" name="price" value="budget" {{ ($price ?? '') === 'budget' ? 'checked' : '' }}> ≤ Rp 150.000</label>
+                    <label><input type="radio" name="price" value="moderate" {{ ($price ?? '') === 'moderate' ? 'checked' : '' }}> Rp 150.001 - Rp 1.500.000</label>
+                    <label><input type="radio" name="price" value="premium" {{ ($price ?? '') === 'premium' ? 'checked' : '' }}> ≥ Rp 1.500.001</label>
                 </div>
 
                 <div>
                     <h4 style="margin: 0 0 10px; font-size: 15px;">Categories</h4>
+                    @php $selected = $categoryIds ?? []; @endphp
                     @foreach($kategori as $kat)
                         <label style="display:block; font-size:14px; color: var(--ink);">
-                            <input type="checkbox" disabled> {{ $kat->nama_kategori }}
+                            <input type="checkbox" name="category[]" value="{{ $kat->id }}" {{ in_array($kat->id, (array)$selected) ? 'checked' : '' }}> {{ $kat->nama_kategori }}
                         </label>
                     @endforeach
                 </div>
@@ -515,7 +616,6 @@
                 </div>
                 <div class="vendor-actions">
                     <a href="{{ route('home') }}" class="btn btn-secondary">Back Home</a>
-                    <a href="{{ route('vendors.index') }}?top_rated=1" class="btn btn-secondary">Top Rated</a>
                 </div>
             </div>
 
@@ -523,32 +623,24 @@
                 @forelse($vendors as $vendor)
                     <article class="vendor-card">
                         <div class="vendor-photo">
-                            <span class="vendor-tag">{{ (float) $vendor->rating >= 4.7 ? 'Top Rated' : 'Trusted' }}</span>
+                            @if(!empty($vendor->foto))
+                                <img src="{{ asset($vendor->foto) }}" alt="{{ $vendor->nama_usaha }}" class="vendor-image">
+                            @endif
                         </div>
                         <div class="vendor-body">
-                            @auth
-                                <h3 class="vendor-title"><a href="{{ route('vendors.show', $vendor->id) }}">{{ $vendor->nama_usaha }}</a></h3>
-                            @else
-                                <h3 class="vendor-title"><a href="{{ route('login') }}">{{ $vendor->nama_usaha }}</a></h3>
-                            @endauth
+                            <h3 class="vendor-title"><a href="{{ route('vendors.show', $vendor->id) }}">{{ $vendor->nama_usaha }}</a></h3>
                             <div class="vendor-meta">
-                                <span>Rating {{ number_format($vendor->rating ?? 0, 1) }}</span>
                                 <span>Rp {{ number_format($vendor->estimasi_harga ?? 0, 0, ',', '.') }}</span>
                             </div>
                             <div class="vendor-meta">
                                 <span>{{ $vendor->kota }}</span>
-                                <span>{{ ucfirst($vendor->status_verif ?? 'pending') }}</span>
                             </div>
                             <div class="vendor-chips">
                                 <span class="chip">{{ $vendor->kategori->nama_kategori ?? 'Umum' }}</span>
                                 <span class="chip">{{ Str::limit($vendor->deskripsi, 22) }}</span>
                             </div>
                             <div class="vendor-footer">
-                                @auth
-                                    <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-primary">View Details</a>
-                                @else
-                                    <a href="{{ route('login') }}" class="btn btn-primary">Login to View</a>
-                                @endauth
+                                <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-primary">View Details</a>
                             </div>
                         </div>
                     </article>

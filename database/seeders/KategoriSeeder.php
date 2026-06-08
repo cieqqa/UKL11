@@ -17,10 +17,13 @@ class KategoriSeeder extends Seeder
     {
         $kategoris = [
             ['nama_kategori' => 'Pembersihan Ruangan'],
+            ['nama_kategori' => 'Deep Cleaning'],
+            ['nama_kategori' => 'AC Service'],
+            ['nama_kategori' => 'Sofa and Carpet'],
         ];
 
         foreach ($kategoris as $kategori) {
-            Kategori::create($kategori);
+            Kategori::updateOrCreate(['nama_kategori' => $kategori['nama_kategori']], $kategori);
         }
     }
 }

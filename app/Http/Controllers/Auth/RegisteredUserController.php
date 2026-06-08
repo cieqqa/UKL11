@@ -37,16 +37,16 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => 'user',
-]);
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'user',
+        ]);
 
-event(new Registered($user));
+        event(new Registered($user));
 
-Auth::login($user);
+        Auth::login($user);
 
-return redirect('/redirect');
-}
+        return redirect()->intended(route('home'));
+    }
 }

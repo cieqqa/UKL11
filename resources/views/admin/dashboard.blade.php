@@ -202,6 +202,7 @@
             <div class="action-group">
                 <a href="{{ route('jasa.create') }}" class="btn btn-primary">+ Tambah Jasa</a>
                 <a href="{{ route('kategori.create') }}" class="btn btn-secondary">+ Tambah Kategori</a>
+                <a href="{{ route('home') }}" class="btn btn-secondary">Kembali ke Home</a>
             </div>
         </div>
 

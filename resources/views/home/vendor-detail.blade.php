@@ -112,6 +112,85 @@
             background: rgba(255, 255, 255, 0.22);
         }
 
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s ease, background .2s ease;
+            font-size: 14px;
+        }
+
+        .dropdown-trigger:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .dropdown-trigger svg {
+            width: 16px;
+            height: 16px;
+            transition: transform .2s ease;
+        }
+
+        .dropdown-trigger[aria-expanded="true"] svg {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(8, 20, 58, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            backdrop-filter: blur(14px);
+            min-width: 180px;
+            padding: 8px 0;
+            box-shadow: 0 20px 40px rgba(2, 18, 65, 0.3);
+            z-index: 30;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 18px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color .2s ease, background .2s ease;
+            font-family: inherit;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .dropdown-menu button[type="submit"] {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ff6b6b;
+        }
+
+        .dropdown-menu button[type="submit"]:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff8787;
+        }
+
         .hero {
             margin-top: 14px;
             height: 240px;
@@ -344,6 +423,7 @@
             }
         }
     </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
     <header class="topbar">
@@ -360,11 +440,30 @@
                 <a href="{{ route('home') }}#contact">Contact</a>
 
                 @auth
-                    @if(auth()->user()->role === 'admin')
-                        <a href="{{ url('/admin') }}" class="pill">Dashboard</a>
-                    @else
-                        <a href="{{ route('dashboard') }}" class="pill">Dashboard</a>
-                    @endif
+                    <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
+                        <button 
+                            class="dropdown-trigger" 
+                            @click="open = !open" 
+                            :aria-expanded="open"
+                        >
+                            {{ auth()->user()->name }}
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </button>
+
+                        <div class="dropdown-menu" x-show="open" x-transition>
+                            @if(auth()->user()->role === 'admin')
+                                <a href="/admin">Admin Panel</a>
+                            @else
+                                <a href="{{ url('/redirect') }}">My Dashboard</a>
+                            @endif
+                            <form method="POST" action="{{ route('logout') }}" style="display: contents;">
+                                @csrf
+                                <button type="submit">Logout</button>
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="pill">Login</a>
                 @endauth
@@ -383,10 +482,8 @@
             <div>
                 <h1 class="name">{{ $jasa->nama_usaha }}</h1>
                 <div class="status">
-                    <span><b>{{ number_format($jasa->rating ?? 0, 1) }}</b> / 5</span>
                     <span>Rp {{ number_format($jasa->estimasi_harga ?? 0, 0, ',', '.') }}</span>
                     <span>{{ $jasa->kota ?? '-' }}</span>
-                    <span class="badge">{{ ucfirst($jasa->status_verif ?? 'pending') }}</span>
                 </div>
             </div>
             <div class="actions">

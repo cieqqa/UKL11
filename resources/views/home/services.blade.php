@@ -285,7 +285,7 @@
                     @if(auth()->user()->role === 'admin')
                         <a href="/admin" class="pill">Dashboard</a>
                     @else
-                        <a href="/dashboard" class="pill">Dashboard</a>
+                        <a href="{{ url('/redirect') }}" class="pill">Dashboard</a>
                     @endif
                 @else
                     <a href="/login" class="pill">Login</a>

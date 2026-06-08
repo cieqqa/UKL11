@@ -46,4 +46,29 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'user_id');
+    }
+
+    public function jasa()
+    {
+        return $this->hasMany(Jasa::class, 'owner_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isVendor()
+    {
+        return $this->role === 'vendor';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
 }

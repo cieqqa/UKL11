@@ -1,44 +1,32 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
                 <!-- Logo -->
-                    <div class="shrink-0 flex items-center">
-                    <a href="{{ url('/redirect') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+                <a href="{{ url('/redirect') }}" class="flex items-center gap-3 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 px-3 py-2 text-white shadow-sm transition hover:shadow-md">
+                    <x-application-logo class="block h-9 w-auto fill-current" />
+                    <span class="hidden text-sm font-semibold uppercase tracking-[0.25em] text-slate-100 sm:block">{{ config('app.name', 'UKL') }}</span>
+                </a>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- Dashboard Dropdown -->
-                    @if(auth()->user())
-                    <div x-data="{ dashboardOpen: false }" class="relative">
-                        <button @click="dashboardOpen = ! dashboardOpen" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ __('Dashboard') }}</div>
-                            <svg class="ms-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-
-                        <div @show="dashboardOpen" @click.away="dashboardOpen = false" :class="{'block': dashboardOpen, 'hidden': ! dashboardOpen}" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                            <a href="{{ url('/redirect') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md">{{ __('My Dashboard') }}</a>
-                            @if(auth()->user()->role === 'admin')
-                                <a href="{{ url('/admin') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 last:rounded-b-md">{{ __('Admin Panel') }}</a>
-                            @endif
-                        </div>
+                @if(auth()->user())
+                    <div class="hidden items-center gap-2 md:flex">
+                        <a href="{{ url('/redirect') }}" class="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:text-slate-900">{{ __('Dashboard') }}</a>
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ url('/') }}" class="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-100 hover:text-indigo-900">{{ __('Kembali ke Home') }}</a>
+                        @endif
                     </div>
-                    @endif
-                </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                        <button class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200">
+                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-slate-800 to-slate-600 text-xs font-bold text-white">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                            <span>{{ Auth::user()->name }}</span>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -77,14 +65,14 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-            <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="url('/redirect')">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden border-t border-slate-200 bg-white sm:hidden">
+        <div class="space-y-1 px-3 py-3">
+            <x-responsive-nav-link :href="url('/redirect')" class="rounded-xl px-3 py-2">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             @if(auth()->user() && auth()->user()->role === 'admin')
-                <x-responsive-nav-link :href="url('/admin')">
-                    {{ __('Admin Panel') }}
+                <x-responsive-nav-link :href="url('/')" class="rounded-xl px-3 py-2">
+                    {{ __('Kembali ke Home') }}
                 </x-responsive-nav-link>
             @endif
         </div>

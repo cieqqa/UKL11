@@ -44,26 +44,29 @@
             align-items: center;
             justify-content: center;
             padding: 12px 18px;
-            border-radius: 12px;
+            border-radius: 9999px;
             font-weight: 700;
             text-decoration: none;
-            transition: transform .16s ease, box-shadow .16s ease;
+            box-shadow: 0 10px 18px rgba(15, 23, 42, .08);
+            transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
         }
 
         .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, .12);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px rgba(37, 99, 235, .15);
+            filter: brightness(1.03);
         }
 
         .btn-primary {
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: #fff;
+            border: 1px solid rgba(37, 99, 235, .18);
         }
 
         .btn-secondary {
-            background: #f8fafc;
+            background: linear-gradient(135deg, #ffffff, #f8fbff);
             color: #334155;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #dbe4f0;
         }
 
         .btn-danger {
@@ -202,7 +205,6 @@
             <div class="action-group">
                 <a href="{{ route('jasa.create') }}" class="btn btn-primary">+ Tambah Jasa</a>
                 <a href="{{ route('kategori.create') }}" class="btn btn-secondary">+ Tambah Kategori</a>
-                <a href="{{ route('home') }}" class="btn btn-secondary">Kembali ke Home</a>
             </div>
         </div>
 

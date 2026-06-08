@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klik n Clean | Home</title>
+    <title>Klik n Clean | Beranda</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -546,30 +546,51 @@
         }
 
         .footer {
-            background: #fff;
-            border-top: 1px solid var(--line);
-            padding: 56px 0;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            color: #e2e8f0;
+            border-top: 1px solid rgba(148, 163, 184, 0.18);
+            padding: 64px 0 40px;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 1.3fr 1fr 1fr 1fr;
-            gap: 18px;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 28px;
+            align-items: start;
         }
 
         .footer h4 {
-            margin: 0 0 14px;
-            font-size: 17px;
+            margin: 0 0 18px;
+            font-size: 18px;
             font-family: 'Manrope', sans-serif;
+            color: #ffffff;
         }
 
         .footer p,
         .footer a {
             display: block;
-            margin: 0 0 9px;
-            color: var(--muted);
-            line-height: 1.5;
+            margin: 0 0 10px;
+            color: rgba(226, 232, 240, 0.82);
+            line-height: 1.8;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #38bdf8;
+        }
+
+        .footer .footer-bottom {
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(148, 163, 184, 0.14);
+            text-align: center;
             font-size: 14px;
+            color: rgba(226, 232, 240, 0.68);
+        }
+        .footer .footer-bottom span {
+            display: block;
+            margin-top: 8px;
         }
 
         @media (max-width: 1080px) {
@@ -650,7 +671,7 @@
                 'kota' => 'Jakarta',
                 'status_verif' => 'verified',
                 'deskripsi' => 'Layanan pembersihan profesional terbaik',
-                'kategori' => (object)['nama_kategori' => 'General Cleaning']
+                'kategori' => (object)['nama_kategori' => 'Pembersihan Umum']
             ],
             (object)[
                 'nama_usaha' => 'CV Rumah Cemerlang',
@@ -658,8 +679,8 @@
                 'estimasi_harga' => 200000,
                 'kota' => 'Bandung',
                 'status_verif' => 'verified',
-                'deskripsi' => 'Deep cleaning dengan teknologi terkini',
-                'kategori' => (object)['nama_kategori' => 'Deep Cleaning']
+                'deskripsi' => 'Pembersihan menyeluruh dengan teknologi terkini',
+                'kategori' => (object)['nama_kategori' => 'Pembersihan Mendalam']
             ],
             (object)[
                 'nama_usaha' => 'Budi Cooling Service',
@@ -668,7 +689,7 @@
                 'kota' => 'Surabaya',
                 'status_verif' => 'verified',
                 'deskripsi' => 'Servis AC termurah dan terpercaya',
-                'kategori' => (object)['nama_kategori' => 'AC Service']
+                'kategori' => (object)['nama_kategori' => 'Layanan AC']
             ],
             (object)[
                 'nama_usaha' => 'Toko Sofa Siap',
@@ -677,7 +698,7 @@
                 'kota' => 'Medan',
                 'status_verif' => 'verified',
                 'deskripsi' => 'Pembersihan sofa dan karpet berkualitas',
-                'kategori' => (object)['nama_kategori' => 'Sofa and Carpet']
+                'kategori' => (object)['nama_kategori' => 'Sofa dan Karpet']
             ]
         ];
     }
@@ -691,8 +712,8 @@
             </a>
 
             <nav class="menu">
-                <a href="{{ url('/') }}">Home</a>
-                <a href="{{ route('vendors.index') }}">Find Vendors</a>
+                <a href="{{ url('/') }}">Beranda</a>
+                <a href="{{ route('vendors.index') }}">Temukan Vendor</a>
                 @auth
                     <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
                         <button 
@@ -708,18 +729,18 @@
 
                         <div class="dropdown-menu" x-show="open" x-transition>
                             @if(auth()->user()->role === 'admin')
-                                <a href="/admin">Admin Panel</a>
+                                <a href="/admin">Panel Admin</a>
                             @else
-                                <a href="{{ url('/redirect') }}">My Dashboard</a>
+                                <a href="{{ url('/redirect') }}">Dashboard Saya</a>
                             @endif
                             <form method="POST" action="{{ route('logout') }}" style="display: contents;">
                                 @csrf
-                                <button type="submit">Logout</button>
+                                <button type="submit">Keluar</button>
                             </form>
                         </div>
                     </div>
                 @else
-                    <a href="/login" class="pill">Login</a>
+                    <a href="/login" class="pill">Masuk</a>
                 @endauth
             </nav>
         </div>
@@ -727,10 +748,10 @@
 
     <section class="hero">
         <div class="wrap hero-inner">
-            <h1>Your Trusted Marketplace for<br>Cleaning and Maintenance Services</h1>
-            <p>Connect with verified, professional service providers in your area. Compare, chat, and book with confidence.</p>
+            <h1>Marketplace Terpercaya untuk<br>Layanan Kebersihan dan Pemeliharaan</h1>
+            <p>Temukan penyedia layanan profesional dan terverifikasi di daerah Anda. Bandingkan, chat, dan pesan dengan percaya diri.</p>
             <div class="hero-actions">
-                <a href="{{ route('vendors.index') }}" class="btn btn-ghost">Browse Vendors</a>
+                <a href="{{ route('vendors.index') }}" class="btn btn-ghost">Cari Vendor</a>
             </div>
         </div>
     </section>
@@ -740,8 +761,8 @@
     <section class="section vendors-wrap" id="vendors">
         <div class="wrap">
             <div class="section-head">
-                <h2>Featured Vendors</h2>
-                <p>Top-rated service providers trusted by customers</p>
+                <h2>Vendor Unggulan</h2>
+                <p>Penyedia layanan terbaik yang dipercaya pelanggan.</p>
             </div>
 
             <div class="vendor-grid">
@@ -752,7 +773,7 @@
                                 @if(!empty($v->foto))
                                     <img src="{{ asset($v->foto) }}" alt="{{ $v->nama_usaha }}" class="vendor-image">
                                 @else
-                                    <span class="vendor-tag">Top Rated</span>
+                                    <span class="vendor-tag">Terbaik</span>
                                 @endif
                             </div>
                             <div class="vendor-body">
@@ -768,7 +789,7 @@
                                     <span class="chip">{{ \Illuminate\Support\Str::limit($v->deskripsi, 18) }}</span>
                                 </div>
                                 <div class="vendor-footer" style="margin-top: 18px;">
-                                    <a href="{{ route('vendors.show', $v->id) }}" class="btn btn-primary">View Details</a>
+                                    <a href="{{ route('vendors.show', $v->id) }}" class="btn btn-primary">Lihat Detail</a>
                                 </div>
                             </div>
                         </article>
@@ -778,7 +799,7 @@
                                 @if(!empty($v->foto))
                                     <img src="{{ asset($v->foto) }}" alt="{{ $v->nama_usaha }}" class="vendor-image">
                                 @else
-                                    <span class="vendor-tag">Top Rated</span>
+                                    <span class="vendor-tag">Terbaik</span>
                                 @endif
                             </div>
                             <div class="vendor-body">
@@ -798,7 +819,7 @@
                     @endif
                 @empty
                     <article class="vendor-card">
-                        <div class="vendor-photo"><span class="vendor-tag">Top Rated</span></div>
+                        <div class="vendor-photo"><span class="vendor-tag">Terbaik</span></div>
                         <div class="vendor-body">
                             <h3 class="vendor-title">Belum Ada Vendor</h3>
                             <div class="vendor-meta"><span>Rating 0.0</span><span>Rp 0</span></div>
@@ -810,7 +831,7 @@
             </div>
 
             <div class="align-center" style="margin-top: 26px;">
-                <a href="{{ route('vendors.index') }}" class="btn" style="background:#2862e0;color:#fff;border-color:#2862e0;">View All Vendors</a>
+                <a href="{{ route('vendors.index') }}" class="btn" style="background:#2862e0;color:#fff;border-color:#2862e0;">Lihat Semua Vendor</a>
             </div>
         </div>
     </section>
@@ -818,30 +839,30 @@
     <section class="section">
         <div class="wrap">
             <div class="section-head">
-                <h2>How It Works</h2>
-                <p>Get professional service in 4 simple steps</p>
+                <h2>Cara Kerja</h2>
+                <p>Dapatkan layanan profesional dalam 4 langkah mudah</p>
             </div>
 
             <div class="steps">
                 <article class="step-item">
                     <div class="step-mark">1</div>
-                    <h3>Choose Service</h3>
-                    <p>Browse categories and select the service you need.</p>
+                    <h3>Pilih Layanan</h3>
+                    <p>Telusuri kategori dan pilih layanan yang Anda butuhkan.</p>
                 </article>
                 <article class="step-item">
                     <div class="step-mark">2</div>
-                    <h3>Select Vendor</h3>
-                    <p>Compare verified vendors and choose the best fit.</p>
+                    <h3>Pilih Vendor</h3>
+                    <p>Bandingkan vendor terverifikasi dan pilih yang paling sesuai.</p>
                 </article>
                 <article class="step-item">
                     <div class="step-mark">3</div>
-                    <h3>Book and Pay</h3>
-                    <p>Schedule your service and complete secure payment.</p>
+                    <h3>Pesan dan Bayar</h3>
+                    <p>Jadwalkan layanan dan selesaikan pembayaran dengan aman.</p>
                 </article>
                 <article class="step-item">
                     <div class="step-mark">4</div>
-                    <h3>Get Service</h3>
-                    <p>Vendor arrives on time and finishes the job professionally.</p>
+                    <h3>Dapatkan Layanan</h3>
+                    <p>Vendor datang tepat waktu dan menyelesaikan pekerjaan secara profesional.</p>
                 </article>
             </div>
         </div>
@@ -850,26 +871,26 @@
     <section class="section why">
         <div class="wrap">
             <div class="section-head">
-                <h2>Why Choose Klik n Clean</h2>
-                <p>Your trusted platform for quality service providers</p>
+                <h2>Mengapa Memilih Klik n Clean</h2>
+                <p>Platform terpercaya untuk penyedia layanan berkualitas.</p>
             </div>
 
             <div class="why-grid">
                 <article class="why-item">
-                    <b>Verified Vendors</b>
-                    <span>All providers are background-checked and verified.</span>
+                    <b>Vendor Terverifikasi</b>
+                    <span>Semua penyedia telah dicek latar belakang dan terverifikasi.</span>
                 </article>
                 <article class="why-item">
-                    <b>Top Ratings</b>
-                    <span>Only highly-rated vendors with proven track records.</span>
+                    <b>Rating Terbaik</b>
+                    <span>Hanya vendor dengan rating tinggi dan track record terpercaya.</span>
                 </article>
                 <article class="why-item">
-                    <b>Fast Booking</b>
-                    <span>Book services in minutes with instant confirmation.</span>
+                    <b>Pemesanan Cepat</b>
+                    <span>Pesan layanan dalam hitungan menit dengan konfirmasi instan.</span>
                 </article>
                 <article class="why-item">
-                    <b>Direct Chat</b>
-                    <span>Communicate directly with vendors before booking.</span>
+                    <b>Chat Langsung</b>
+                    <span>Berkomunikasi langsung dengan vendor sebelum memesan.</span>
                 </article>
             </div>
         </div>
@@ -877,10 +898,10 @@
 
     <section class="cta">
         <div class="wrap">
-            <h2>Ready to Get Started?</h2>
-            <p>Join satisfied customers who trust Klik n Clean for cleaning and maintenance needs.</p>
+            <h2>Siap Memulai?</h2>
+            <p>Bergabunglah dengan pelanggan puas yang mempercayai Klik n Clean untuk kebutuhan kebersihan dan pemeliharaan.</p>
             <div class="hero-actions" style="margin-top:24px;">
-                <a href="{{ route('vendors.index') }}" class="btn btn-solid">Browse Vendors</a>
+                <a href="{{ route('vendors.index') }}" class="btn btn-solid">Telusuri Vendor</a>
             </div>
         </div>
     </section>
@@ -889,30 +910,33 @@
         <div class="wrap footer-grid">
             <div>
                 <h4>Klik n Clean</h4>
-                <p>Your trusted marketplace connecting you with professional cleaning and maintenance service providers.</p>
+                <p>Marketplace terpercaya yang menghubungkan Anda dengan penyedia layanan kebersihan dan pemeliharaan profesional.</p>
             </div>
 
             <div>
-                <h4>Quick Links</h4>
-                <a href="#">Home</a>
-                <a href="{{ route('vendors.index') }}">Find Vendors</a>
-                <a href="{{ url('/jasa/add') }}">Book Now</a>
+                <h4>Tautan Cepat</h4>
+                <a href="{{ route('home') }}">Beranda</a>
+                <a href="{{ route('vendors.index') }}">Temukan Vendor</a>
+                <a href="{{ route('vendors.index') }}">Pesan Sekarang</a>
             </div>
 
             <div>
-                <h4>Popular Services</h4>
-                <p>General Cleaning</p>
-                <p>Deep Cleaning</p>
-                <p>AC Service</p>
-                <p>Pest Control</p>
+                <h4>Layanan Populer</h4>
+                <a href="{{ route('vendors.index', ['search' => 'General Cleaning']) }}">Pembersihan Umum</a>
+                <a href="{{ route('vendors.index', ['search' => 'Deep Cleaning']) }}">Pembersihan Mendalam</a>
+                <a href="{{ route('vendors.index', ['search' => 'AC Service']) }}">Layanan AC</a>
+                <a href="{{ route('vendors.index', ['search' => 'Pest Control']) }}">Pengendalian Hama</a>
             </div>
 
             <div>
-                <h4>Contact Us</h4>
+                <h4>Hubungi Kami</h4>
                 <p>+62 812 3456 7890</p>
                 <p>support@kliknclean.com</p>
                 <p>Jl. Bersih Sejahtera No. 123, Indonesia</p>
             </div>
+        </div>
+        <div class="wrap footer-bottom">
+            <span>© 2026 Klik n Clean. Semua hak dilindungi undang-undang.</span>
         </div>
     </footer>
 </body>

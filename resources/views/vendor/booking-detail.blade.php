@@ -4,7 +4,7 @@
 @section('header', 'Detail Pesanan')
 
 @section('content')
-    <div class="max-w-4xl">
+    <div class="mx-auto w-full max-w-5xl">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column - Details -->
             <div class="lg:col-span-2">

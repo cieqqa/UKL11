@@ -28,6 +28,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = $request->user();
+
+        // Redirect based on role: admin -> admin dashboard, vendor -> vendor dashboard, else home
+        if ($user && $user->role === 'admin') {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        if ($user && $user->role === 'vendor') {
+            return redirect()->intended(route('vendor.dashboard'));
+        }
+
         return redirect()->intended(route('home'));
     }
 

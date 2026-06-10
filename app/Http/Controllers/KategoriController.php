@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategori;
+use App\Models\Jasa;
+use App\Models\BusinessRequest;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -10,7 +12,12 @@ class KategoriController extends Controller
     public function index()
     {
         $kategori = Kategori::all();
-        return view('kategori.index', compact('kategori'));
+        $stats = [
+            'totalJasa' => Jasa::count(),
+            'totalKategori' => Kategori::count(),
+            'pendingRequests' => BusinessRequest::where('status', 'pending')->count(),
+        ];
+        return view('kategori.index', compact('kategori', 'stats'));
     }
 
     public function create()

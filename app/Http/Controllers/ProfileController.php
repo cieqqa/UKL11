@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\BusinessRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $businessRequest = BusinessRequest::where('user_id', $request->user()->id)
+            ->latest()
+            ->first();
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'businessRequest' => $businessRequest,
         ]);
     }
 

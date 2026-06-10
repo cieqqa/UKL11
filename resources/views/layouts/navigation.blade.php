@@ -1,60 +1,68 @@
-<nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+<nav x-data="{ open: false }" class="sticky top-0 z-40 shadow-sm" style="background: rgba(15, 34, 87, 0.96); border-bottom: 1px solid rgba(255, 255, 255, 0.12);">
+    @php
+        $profileRoute = Auth::user()->role === 'vendor' ? route('vendor.profile') : route('profile.edit');
+    @endphp
+
     <!-- Primary Navigation Menu -->
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <!-- Logo -->
-                <a href="{{ url('/redirect') }}" class="flex items-center gap-3 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 px-3 py-2 text-white shadow-sm transition hover:shadow-md">
-                    <x-application-logo class="block h-9 w-auto fill-current" />
-                    <span class="hidden text-sm font-semibold uppercase tracking-[0.25em] text-slate-100 sm:block">{{ config('app.name', 'UKL') }}</span>
-                </a>
+            
+            <!-- SISI KIRI: Logo Utama (Kotak K Diperlebar Menjadi Persegi Sempurna) -->
+<div class="flex items-center">
+    <a href="{{ url('/redirect') }}" class="flex items-center gap-3 rounded-2xl px-3 py-2 text-white transition hover:bg-white/10">
+        <!-- Menambahkan w-11, max-h-11, dan aspect-square agar pasti melebar membentuk kotak sempurna -->
+        <div class="flex h-11 w-11 aspect-square items-center justify-center rounded-xl text-base font-bold text-white shadow-[0_4px_12px_rgba(59,130,246,0.3)]" 
+             style="background: linear-gradient(135deg, #38bdf8, #3b82f6, #6366f1); max-height: 2.75rem;">
+            <span>K</span>
+        </div>
+        <span class="text-[1.15rem] font-semibold tracking-tight text-white">Klik n Clean</span>
+    </a>
+</div>
 
-                <!-- Navigation Links -->
-                @if(auth()->user())
-                    <div class="hidden items-center gap-2 md:flex">
-                        <a href="{{ url('/redirect') }}" class="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:text-slate-900">{{ __('Dashboard') }}</a>
-                        @if(auth()->user()->role === 'admin')
-                            <a href="{{ url('/') }}" class="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-100 hover:text-indigo-900">{{ __('Kembali ke Home') }}</a>
-                        @endif
-                    </div>
-                @endif
-            </div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200">
-                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-slate-800 to-slate-600 text-xs font-bold text-white">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                            <span>{{ Auth::user()->name }}</span>
+            <!-- SISI KANAN: Menu Navigasi + Dropdown Kapsul (Tanpa Inisial Huruf P) -->
+            <div class="hidden sm:flex sm:items-center sm:gap-8">
+                
+                <!-- Menu Navigasi Utama -->
+                <div class="flex items-center gap-6">
+                    <a href="{{ url('/') }}" class="text-sm font-medium text-white transition hover:text-slate-200">Beranda</a>
+                    <a href="{{ route('vendors.index') }}" class="text-sm font-medium text-white transition hover:text-slate-200">Find Vendors</a>
+                </div>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                <!-- Bagian Dropdown Profil Kapsul -->
+                <div class="flex items-center">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/20">
+                                <!-- Inisial lingkaran huruf 'P' dihapus agar bersih sesuai contoh gambar -->
+                                <span class="text-white">{{ Auth::user()->name }}</span>
+                                <svg class="h-4 w-4 text-white ms-1" xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+                            </button>
+                        </x-slot>
 
-                    <x-slot name="content">
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                        <x-slot name="content">
+                            <x-dropdown-link :href="$profileRoute">
+                                Profil Saya
                             </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm leading-5 text-slate-900 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 transition duration-150">
+                                    {{ __('Log Out') }}
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
             </div>
 
-            <!-- Hamburger -->
+            <!-- Hamburger Menu (Mobile) -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-slate-200 hover:bg-white/10 focus:outline-none focus:bg-white/10 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -64,37 +72,27 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden border-t border-slate-200 bg-white sm:hidden">
+    <!-- Responsive Navigation Menu (Mobile) -->
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden border-t border-white/10 bg-[#08143A]/95 sm:hidden">
         <div class="space-y-1 px-3 py-3">
-            <x-responsive-nav-link :href="url('/redirect')" class="rounded-xl px-3 py-2">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            @if(auth()->user() && auth()->user()->role === 'admin')
-                <x-responsive-nav-link :href="url('/')" class="rounded-xl px-3 py-2">
-                    {{ __('Kembali ke Home') }}
-                </x-responsive-nav-link>
-            @endif
+            <a href="{{ url('/') }}" class="block rounded-xl px-3 py-2 text-white hover:bg-white/10">Beranda</a>
+            <a href="{{ route('vendors.index') }}" class="block rounded-xl px-3 py-2 text-white hover:bg-white/10">Find Vendors</a>
         </div>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
+        <div class="pt-4 pb-1 border-t border-white/10">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-slate-300">{{ Auth::user()->email }}</div>
             </div>
-
             <div class="mt-3 space-y-1">
-
-                <!-- Authentication -->
+                <x-responsive-nav-link :href="$profileRoute">
+                    Profil Saya
+                </x-responsive-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                    <button type="submit" class="w-full text-left rounded-xl px-3 py-2 text-sm text-white hover:bg-white/10 focus:outline-none focus:bg-white/10 transition">
                         {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    </button>
                 </form>
             </div>
         </div>

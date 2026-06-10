@@ -410,8 +410,26 @@
         }
 
         @media (max-width: 620px) {
+            .topbar .wrap {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
             .menu {
-                display: none;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .menu a,
+            .menu .pill,
+            .dropdown-trigger {
+                flex: 0 1 auto;
+                min-width: 120px;
+                text-align: center;
             }
 
             .actions {
@@ -434,10 +452,8 @@
             </a>
 
             <nav class="menu">
-                <a href="{{ route('home') }}">Home</a>
-                <a href="{{ route('home') }}#services">Services</a>
+                <a href="{{ route('home') }}">Beranda</a>
                 <a href="{{ route('vendors.index') }}">Find Vendors</a>
-                <a href="{{ route('home') }}#contact">Contact</a>
 
                 @auth
                     <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
@@ -453,19 +469,20 @@
                         </button>
 
                         <div class="dropdown-menu" x-show="open" x-transition>
+                            <a href="{{ route('profile.edit') }}">Profil Saya</a>
                             @if(auth()->user()->role === 'admin')
-                                <a href="/admin">Admin Panel</a>
+                                <a href="{{ url('/admin') }}">Admin Panel</a>
                             @else
-                                <a href="{{ url('/redirect') }}">My Dashboard</a>
+                                <a href="{{ url('/redirect') }}">Dashboard Saya</a>
                             @endif
-                            <form method="POST" action="{{ route('logout') }}" style="display: contents;">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit">Logout</button>
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-900 hover:bg-slate-100">Logout</button>
                             </form>
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="pill">Login</a>
+                    <a href="{{ route('login') }}" class="pill">Masuk</a>
                 @endauth
             </nav>
         </div>
@@ -492,7 +509,7 @@
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline">Login to Book</a>
                 @endauth
-                <button onclick="window.history.back()" class="btn btn-outline">← Kembali ke Featured Vendors</button>
+                <a href="{{ route('vendors.index') }}" class="btn btn-outline">← Kembali ke Featured Vendors</a>
             </div>
         </div>
 

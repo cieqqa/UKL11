@@ -226,11 +226,29 @@
         }
 
         .panel {
+            position: sticky;
+            top: 100px;
+            align-self: start;
             border-radius: 28px;
             padding: 28px;
             background: #fff;
             box-shadow: var(--shadow);
             border: 1px solid #eef2f8;
+        }
+
+        .panel .filter-group {
+            max-height: calc(100vh - 220px);
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .panel .filter-group::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .panel .filter-group::-webkit-scrollbar-thumb {
+            background: rgba(31, 83, 215, 0.2);
+            border-radius: 999px;
         }
 
         .panel h3 {
@@ -378,6 +396,17 @@
             font-weight: 600;
         }
 
+        .vendor-meta .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eef4ff;
+            color: #1d4ed8;
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-weight: 600;
+        }
+
         .vendor-chips {
             display: flex;
             flex-wrap: wrap;
@@ -399,7 +428,171 @@
             justify-content: space-between;
             align-items: center;
             gap: 12px;
+            margin-top: 24px;
+        }
+
+        .vendor-footer .btn {
+            width: auto;
+            white-space: nowrap;
+            padding: 12px 20px;
+            border-radius: 18px;
+        }
+
+        .vendor-count {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            font-size: 0.95rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .hero-summary {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 14px;
+            color: #334155;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .hero-summary span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .hero-summary strong {
+            color: #1d4ed8;
+        }
+
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 26px;
+        }
+
+        .vendor-card {
+            display: flex;
+            flex-direction: column;
+            border-radius: 32px;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #edf2f7;
+            box-shadow: 0 22px 52px rgba(26, 70, 135, 0.08);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .vendor-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 70px rgba(26, 70, 135, 0.14);
+        }
+
+        .vendor-photo {
+            min-height: 200px;
+            background: linear-gradient(135deg, #eef6ff 0%, #f8fbff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vendor-photo .vendor-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            transition: transform .3s ease;
+        }
+
+        .vendor-card:hover .vendor-photo .vendor-image {
+            transform: scale(1.04);
+        }
+
+        .vendor-photo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.12) 100%);
+            z-index: 2;
+        }
+
+        .vendor-photo .vendor-tag {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 3;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(22, 45, 183, 0.92);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .vendor-body {
+            padding: 28px 26px 30px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .vendor-title {
+            margin: 0;
+            font-size: 22px;
+            line-height: 1.2;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .vendor-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .vendor-title a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .vendor-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .vendor-details span {
+            background: #eef4ff;
+            color: #1e40af;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .vendor-description {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .vendor-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .vendor-footer .btn {
@@ -427,6 +620,27 @@
         }
 
         @media (max-width: 980px) {
+            .topbar .wrap {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
+            .menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .menu a,
+            .menu .pill,
+            .dropdown-trigger {
+                flex: 0 1 auto;
+                min-width: 120px;
+                text-align: center;
+            }
+
             .hero-grid,
             .main-grid {
                 grid-template-columns: 1fr;
@@ -521,12 +735,12 @@
 <body>
     <header class="topbar">
         <div class="wrap">
-            <a href="{{ url('/') }}" class="brand">
+            <a href="{{ route('home') }}" class="brand">
                 <span class="brand-mark">K</span>
                 Klik n Clean
             </a>
             <nav class="menu">
-                <a href="{{ url('/') }}">Home</a>
+                <a href="{{ url('/') }}">Beranda</a>
                 <a href="{{ route('vendors.index') }}" class="active">Find Vendors</a>
                 @auth
                     <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
@@ -542,19 +756,20 @@
                         </button>
 
                         <div class="dropdown-menu" x-show="open" x-transition>
+                            <a href="{{ route('profile.edit') }}">Profil Saya</a>
                             @if(auth()->user()->role === 'admin')
-                                <a href="/admin">Admin Panel</a>
+                                <a href="{{ url('/admin') }}">Admin Panel</a>
                             @else
-                                <a href="{{ url('/redirect') }}">My Dashboard</a>
+                                <a href="{{ url('/redirect') }}">Dashboard Saya</a>
                             @endif
-                            <form method="POST" action="{{ route('logout') }}" style="display: contents;">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit">Logout</button>
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-900 hover:bg-slate-100">Logout</button>
                             </form>
                         </div>
                     </div>
                 @else
-                    <a href="/login" class="pill">Login</a>
+                    <a href="{{ route('login') }}" class="pill">Masuk</a>
                 @endauth
             </nav>
         </div>
@@ -569,9 +784,15 @@
                     <input type="text" name="search" placeholder="Search vendors or services..." value="{{ old('search', $search ?? '') }}">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
+                <div class="hero-summary">
+                    <span><strong>{{ $vendors->count() }}</strong> vendors found</span>
+                    @if(!empty($search))
+                        <span>Search results for "{{ $search }}"</span>
+                    @endif
+                </div>
                 @guest
-                    <div style="margin-top:16px; padding:14px; border-radius:12px; background:#fff; box-shadow:var(--shadow);">
-                        <p style="margin:0 0 8px;">Silakan login untuk melihat detail vendor lengkap dan melakukan pemesanan.</p>
+                    <div style="margin-top:16px; padding:18px; border-radius:18px; background:#fff; box-shadow:var(--shadow);">
+                        <p style="margin:0 0 10px; color:var(--ink); font-weight:600;">Silakan login untuk melihat detail vendor lengkap dan melakukan pemesanan.</p>
                         <a href="{{ route('login') }}" class="btn btn-primary">Login / Register</a>
                     </div>
                 @endguest
@@ -606,13 +827,36 @@
 
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
+
+            <div style="margin-top:18px; padding:16px; border-radius:12px; background:#f8fafc;">
+                <h4 style="margin:0 0 8px;">Daftarkan PT / CV</h4>
+                <p style="margin:0 0 12px; color:var(--muted);">Jika Anda mewakili sebuah PT atau CV dan ingin terdaftar sebagai vendor, silakan ajukan permintaan pendaftaran. Admin akan meninjau dan mengonfirmasi.</p>
+                @auth
+                    <a href="{{ route('business-request.create') }}" class="btn btn-primary">Daftarkan PT / CV</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary">Login untuk Daftar</a>
+                @endauth
+            </div>
+
         </aside>
 
         <main>
+            @php
+            $showAll = request()->boolean('show_all');
+            $previewLimit = 4;
+            $totalVendors = method_exists($vendors, 'total') ? $vendors->total() : count($vendors);
+            $displayVendors = $showAll ? $vendors : $vendors->take($previewLimit);
+        @endphp
+
             <div class="vendor-header">
                 <div>
-                    <h2 style="margin:0; font-size: 26px;">Browse Vendors</h2>
-                    <p style="margin: 8px 0 0; color: var(--muted);">Scroll through trusted vendors and view full details on each listing.</p>
+                    <h2 style="margin:0; font-size: 26px;">Browse Vendors <span class="vendor-count">({{ $totalVendors }})</span></h2>
+                    <p style="margin: 8px 0 0; color: var(--muted);">
+                        Scroll through trusted vendors and view full details on each listing.
+                        @if(!$showAll && $totalVendors > $previewLimit)
+                            Menampilkan {{ min($previewLimit, $totalVendors) }} dari {{ $totalVendors }} vendor.
+                        @endif
+                    </p>
                 </div>
                 <div class="vendor-actions">
                     <a href="{{ route('home') }}" class="btn btn-secondary">Back Home</a>
@@ -620,7 +864,7 @@
             </div>
 
             <div id="vendor-list" class="vendor-grid">
-                @forelse($vendors as $vendor)
+                @forelse($displayVendors as $vendor)
                     <article class="vendor-card">
                         <div class="vendor-photo">
                             @if(!empty($vendor->foto))
@@ -629,15 +873,16 @@
                         </div>
                         <div class="vendor-body">
                             <h3 class="vendor-title"><a href="{{ route('vendors.show', $vendor->id) }}">{{ $vendor->nama_usaha }}</a></h3>
-                            <div class="vendor-meta">
+                            <div class="vendor-details">
                                 <span>Rp {{ number_format($vendor->estimasi_harga ?? 0, 0, ',', '.') }}</span>
-                            </div>
-                            <div class="vendor-meta">
                                 <span>{{ $vendor->kota }}</span>
+                                @if(!empty($vendor->rating))
+                                    <span>{{ number_format($vendor->rating, 1) }} ★</span>
+                                @endif
                             </div>
+                            <p class="vendor-description">{{ Str::limit($vendor->deskripsi, 90) }}</p>
                             <div class="vendor-chips">
                                 <span class="chip">{{ $vendor->kategori->nama_kategori ?? 'Umum' }}</span>
-                                <span class="chip">{{ Str::limit($vendor->deskripsi, 22) }}</span>
                             </div>
                             <div class="vendor-footer">
                                 <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-primary">View Details</a>
@@ -651,6 +896,16 @@
                     </div>
                 @endforelse
             </div>
+
+            @if($totalVendors > $previewLimit)
+                <div class="align-center" style="margin-top: 28px; text-align: center;">
+                    @if(!$showAll)
+                        <a href="{{ route('vendors.index', array_merge(request()->query(), ['show_all' => 1])) }}" class="btn btn-primary">Lihat Semua Vendor</a>
+                    @else
+                        <a href="{{ route('vendors.index', request()->except('show_all')) }}" class="btn btn-secondary">Lihat Lebih Sedikit</a>
+                    @endif
+                </div>
+            @endif
         </main>
     </div>
 </body>

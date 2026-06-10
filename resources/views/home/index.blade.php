@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Klik n Clean | Beranda</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -194,6 +195,118 @@
             color: #ff8787;
         }
 
+
+        .notification-dropdown {
+            position: relative;
+        }
+
+        .notification-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            border-radius: 12px;
+            backdrop-filter: blur(14px);
+            min-width: 360px;
+            max-height: 450px;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+            z-index: 30;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            transition: background .2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .notification-item.unread {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .notification-status {
+            width: 4px;
+            height: 100%;
+            border-radius: 2px;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .notification-view-all {
+            display: block;
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 700;
+            color: #2563eb;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            transition: background .2s ease;
+            text-decoration: none;
+        }
+
+        .notification-view-all:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .notification-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        .notification-empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .notification-empty p {
+            font-size: 14px;
+            margin: 0;
+        }
+
         .hero {
             margin-top: 0;
             border-radius: 0;
@@ -267,6 +380,17 @@
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
         }
 
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(37, 99, 235, 0.25);
+        }
+
         .btn-ghost {
             border-color: rgba(255, 255, 255, 0.5);
             color: #fff;
@@ -277,8 +401,42 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        .hero-cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 42px;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 24px;
+            padding: 24px;
+            color: #fff;
+            box-shadow: 0 22px 50px rgba(15, 23, 42, 0.16);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-card strong {
+            display: block;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .hero-card span {
+            display: block;
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 0.95rem;
+        }
+
         .section {
             padding: 76px 0;
+        }
+
+        .section-alt {
+            background: #eef3fb;
         }
 
         .section-head {
@@ -607,8 +765,26 @@
         }
 
         @media (max-width: 680px) {
+            .topbar .wrap {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
             .menu {
-                display: none;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .menu a,
+            .menu .pill,
+            .dropdown-trigger {
+                flex: 0 1 auto;
+                min-width: 120px;
+                text-align: center;
             }
 
             .hero-inner {
@@ -617,6 +793,10 @@
 
             .hero p {
                 font-size: 16px;
+            }
+
+            .hero-cards {
+                grid-template-columns: 1fr;
             }
 
             .service-grid,
@@ -634,6 +814,11 @@
 @php
     $palette = ['#3b82f6', '#9333ea', '#06b6d4', '#14b8a6', '#f97316', '#ec4899', '#6366f1', '#ef4444', '#22c55e', '#eab308', '#64748b', '#60a5fa'];
     $services = [];
+    $vendorCount = 0;
+
+    if (isset($jasa)) {
+        $vendorCount = is_countable($jasa) ? count($jasa) : (method_exists($jasa, 'count') ? $jasa->count() : 0);
+    }
 
     if (isset($kategori) && $kategori->count() > 0) {
         foreach ($kategori as $index => $kat) {
@@ -713,7 +898,7 @@
 
             <nav class="menu">
                 <a href="{{ url('/') }}">Beranda</a>
-                <a href="{{ route('vendors.index') }}">Temukan Vendor</a>
+                <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 @auth
                     <div class="user-dropdown" x-data="{ open: false }" @click.away="open = false">
                         <button 
@@ -733,9 +918,10 @@
                             @else
                                 <a href="{{ url('/redirect') }}">Dashboard Saya</a>
                             @endif
-                            <form method="POST" action="{{ route('logout') }}" style="display: contents;">
+                            <a href="{{ route('profile.edit') }}">Profil Saya</a>
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit">Keluar</button>
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-900 hover:bg-slate-100">Keluar</button>
                             </form>
                         </div>
                     </div>
@@ -746,17 +932,62 @@
         </div>
     </header>
 
+    {{-- notification popup removed; use notifications page instead --}}
+
     <section class="hero">
         <div class="wrap hero-inner">
             <h1>Marketplace Terpercaya untuk<br>Layanan Kebersihan dan Pemeliharaan</h1>
             <p>Temukan penyedia layanan profesional dan terverifikasi di daerah Anda. Bandingkan, chat, dan pesan dengan percaya diri.</p>
             <div class="hero-actions">
-                <a href="{{ route('vendors.index') }}" class="btn btn-ghost">Cari Vendor</a>
+                <a href="{{ route('vendors.index') }}" class="btn btn-solid">Cari Vendor</a>
+            </div>
+
+            <div class="hero-cards">
+                <article class="hero-card">
+                    <strong>{{ $vendorCount }}</strong>
+                    <span>Vendor terverifikasi siap melayani Anda</span>
+                </article>
+                <article class="hero-card">
+                    <strong>4.8/5</strong>
+                    <span>Rating rata-rata vendor terbaik</span>
+                </article>
+                <article class="hero-card">
+                    <strong>1</strong>
+                    <span>Platform lengkap untuk layanan kebersihan dan pemeliharaan</span>
+                </article>
             </div>
         </div>
     </section>
 
-   <!-- Card 1 -->
+    <section class="section section-alt" id="categories">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Kategori Layanan</h2>
+                <p>Telusuri kategori populer dan pilih layanan sesuai kebutuhan Anda.</p>
+            </div>
+            <div class="service-grid">
+                @forelse($services as $service)
+                    <article class="service-item">
+                        <div class="service-mark" style="background: {{ $service['color'] }};">{{ $service['code'] }}</div>
+                        <span>{{ $service['name'] }}</span>
+                    </article>
+                @empty
+                    <article class="service-item">
+                        <div class="service-mark" style="background: #3b82f6;">PK</div>
+                        <span>Pembersihan Umum</span>
+                    </article>
+                    <article class="service-item">
+                        <div class="service-mark" style="background: #10b981;">AC</div>
+                        <span>Servis AC</span>
+                    </article>
+                    <article class="service-item">
+                        <div class="service-mark" style="background: #fb7185;">DF</div>
+                        <span>Deep Cleaning</span>
+                    </article>
+                @endforelse
+            </div>
+        </div>
+    </section>
 
     <section class="section vendors-wrap" id="vendors">
         <div class="wrap">
@@ -830,8 +1061,8 @@
                 @endforelse
             </div>
 
-            <div class="align-center" style="margin-top: 26px;">
-                <a href="{{ route('vendors.index') }}" class="btn" style="background:#2862e0;color:#fff;border-color:#2862e0;">Lihat Semua Vendor</a>
+            <div class="align-center" style="margin-top: 36px;">
+                <a href="{{ route('vendors.index') }}" class="btn btn-primary">Lihat Semua Vendor</a>
             </div>
         </div>
     </section>
@@ -916,7 +1147,7 @@
             <div>
                 <h4>Tautan Cepat</h4>
                 <a href="{{ route('home') }}">Beranda</a>
-                <a href="{{ route('vendors.index') }}">Temukan Vendor</a>
+                <a href="{{ route('vendors.index') }}">Find Vendors</a>
                 <a href="{{ route('vendors.index') }}">Pesan Sekarang</a>
             </div>
 
@@ -939,5 +1170,7 @@
             <span>© 2026 Klik n Clean. Semua hak dilindungi undang-undang.</span>
         </div>
     </footer>
+
+
 </body>
 </html>

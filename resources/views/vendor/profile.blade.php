@@ -6,27 +6,27 @@
 @section('content')
     <div class="space-y-8">
         <!-- Profile Header -->
-        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 rounded-[2rem] shadow-2xl overflow-hidden border border-slate-200">
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 rounded-[2rem] shadow-2xl shadow-slate-900/40 overflow-hidden border border-slate-700">
             <div class="p-8 lg:p-10 text-white">
                 <div class="grid gap-8 lg:grid-cols-[280px_1fr] lg:items-end">
-                    <div class="flex flex-col gap-6 bg-white/10 rounded-[1.5rem] p-8">
-                        <div class="flex items-center justify-center w-28 h-28 rounded-[1.5rem] bg-blue-500 text-5xl font-bold text-white shadow-lg">
+                    <div class="flex flex-col gap-6 rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-8">
+                        <div class="flex items-center justify-center w-28 h-28 rounded-[1.5rem] bg-gradient-to-br from-sky-500 to-indigo-600 text-5xl font-bold text-white shadow-lg shadow-sky-500/25">
                             {{ substr(auth()->user()->name, 0, 1) }}
                         </div>
                         <div>
                             <h1 class="text-3xl font-semibold">{{ auth()->user()->name }}</h1>
-                            <p class="mt-2 text-slate-200">Vendor Account</p>
+                            <p class="mt-2 text-slate-300">Profil PT/CV</p>
                         </div>
                     </div>
 
                     <div class="grid gap-6">
-                        <div class="rounded-[1.5rem] bg-white/10 p-6 border border-white/10 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Terdaftar sejak</p>
-                            <p class="mt-3 text-3xl font-semibold">{{ auth()->user()->created_at->format('d M Y') }}</p>
+                        <div class="rounded-[1.5rem] bg-slate-900/80 p-6 border border-white/10 backdrop-blur-sm">
+                            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Terdaftar sejak</p>
+                            <p class="mt-3 text-3xl font-semibold text-white">{{ auth()->user()->created_at->format('d M Y') }}</p>
                         </div>
-                        <div class="rounded-[1.5rem] bg-white/10 p-6 border border-white/10 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Status Akun</p>
-                            <p class="mt-3 text-3xl font-semibold">Vendor</p>
+                        <div class="rounded-[1.5rem] bg-slate-900/80 p-6 border border-white/10 backdrop-blur-sm">
+                            <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Status Akun</p>
+                            <p class="mt-3 text-3xl font-semibold text-white">Vendor</p>
                         </div>
                     </div>
                 </div>
@@ -76,6 +76,8 @@
             </div>
 
             <div class="space-y-6">
+                <!-- Password form removed -->
+
                 <div class="grid gap-6 md:grid-cols-2">
                     <div class="bg-white rounded-[1.5rem] shadow-xl border border-slate-200 p-6">
                         <p class="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Layanan Aktif</p>

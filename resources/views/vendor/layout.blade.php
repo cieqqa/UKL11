@@ -7,39 +7,49 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50">
-    <div class="h-screen flex flex-col lg:flex-row overflow-hidden">
+<body class="bg-slate-100 text-slate-900 antialiased">
+    <div class="min-h-screen flex flex-col lg:flex-row">
         <!-- Sidebar -->
-        <aside class="w-full lg:w-64 bg-white shadow-lg flex-shrink-0 lg:h-full">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+        <aside class="w-full lg:w-72 bg-white border-b border-slate-200 lg:border-b-0 lg:border-r shadow-sm">
+            <div class="px-6 py-7 border-b border-slate-200">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-lg font-semibold shadow-sm">
                         {{ substr(auth()->user()->name, 0, 1) }}
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900">{{ auth()->user()->name }}</h3>
-                        <p class="text-xs text-gray-500">Vendor</p>
+                        <p class="text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-slate-500">Akun Vendor</p>
                     </div>
                 </div>
+                <p class="mt-4 text-xs text-slate-500">Kelola layanan, pesanan, dan performa dengan antarmuka yang bersih.</p>
             </div>
 
-            <nav class="p-4 space-y-2">
-                <a href="{{ route('vendor.dashboard') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('vendor.dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50' }} transition">
-                    <i class="fas fa-chart-line w-5 mr-3"></i> Dashboard
+            <nav class="px-4 py-6 space-y-1">
+                <div class="px-3 mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Navigasi</div>
+                <a href="{{ route('vendor.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('vendor.dashboard') ? 'bg-slate-100 text-slate-900 shadow-sm font-semibold' : 'text-slate-700 hover:bg-slate-50' }}">
+                    <i class="fas fa-chart-line w-4"></i>
+                    Dashboard
                 </a>
-                <a href="{{ route('vendor.bookings') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('vendor.bookings') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50' }} transition">
-                    <i class="fas fa-calendar-check w-5 mr-3"></i> Pesanan
+                <a href="{{ route('vendor.bookings') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('vendor.bookings') ? 'bg-slate-100 text-slate-900 shadow-sm font-semibold' : 'text-slate-700 hover:bg-slate-50' }}">
+                    <i class="fas fa-calendar-check w-4"></i>
+                    Pesanan
                 </a>
-                <a href="{{ route('vendor.profile') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('vendor.profile') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50' }} transition">
-                    <i class="fas fa-user w-5 mr-3"></i> Profil
+                <a href="{{ route('vendor.my-jasa') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('vendor.my-jasa') ? 'bg-slate-100 text-slate-900 shadow-sm font-semibold' : 'text-slate-700 hover:bg-slate-50' }}">
+                    <i class="fas fa-briefcase w-4"></i>
+                    Kelola Layanan
+                </a>
+                <a href="{{ route('vendor.profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('vendor.profile') ? 'bg-slate-100 text-slate-900 shadow-sm font-semibold' : 'text-slate-700 hover:bg-slate-50' }}">
+                    <i class="fas fa-user w-4"></i>
+                    Profil
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-gray-200">
+            <div class="px-6 py-5 border-t border-slate-200">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition font-medium">
-                        <i class="fas fa-sign-out-alt w-5 mr-3"></i> Logout
+                    <button type="submit" class="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
                     </button>
                 </form>
             </div>
@@ -48,27 +58,33 @@
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto">
             <!-- Top Header -->
-            <header class="bg-white shadow-sm sticky top-0 z-40">
-                <div class="flex items-center justify-between px-8 py-4">
-                    <h1 class="text-2xl font-bold text-gray-900">@yield('header', 'Dashboard')</h1>
-                    <div class="flex items-center gap-6">
-                        <a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-900 transition">
-                            <i class="fas fa-home w-5"></i>
+            <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
+                <div class="mx-auto flex max-w-[1800px] items-center justify-between px-6 py-5">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-slate-900">@yield('header', 'Dashboard')</h1>
+                        <p class="text-sm text-slate-500">Ringkasan operasi vendor Anda dalam satu tampilan.</p>
+                    </div>
+                    <div class="inline-flex items-center gap-3">
+                        <a href="{{ route('home') }}" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                            <i class="fas fa-home"></i> Beranda
+                        </a>
+                        <a href="{{ route('vendors.index') }}" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                            <i class="fas fa-search"></i> Find Vendors
                         </a>
                     </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <div class="p-8 min-h-[calc(100vh-5rem)]">
+            <div class="mx-auto max-w-[1800px] px-6 py-8">
                 @if(session('success'))
-                    <div class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 text-green-700">
+                    <div class="mb-6 rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-700">
                         <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-700">
+                    <div class="mb-6 rounded-3xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
                         <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
                     </div>
                 @endif

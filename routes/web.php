@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\BusinessRequestController;
 use App\Models\Booking;
+use App\Models\BusinessRequest;
 use App\Models\Jasa;
 use App\Models\Kategori;
 
@@ -13,9 +16,16 @@ use App\Models\Kategori;
 // HOME
 // =========================
 Route::get('/', function () {
+    // default empty values in case DB is unreachable (prevents blank loading pages)
+    $jasa = collect();
+    $kategori = collect();
 
-    $jasa = Jasa::with('kategori')->latest()->get();
-    $kategori = Kategori::all();
+    try {
+        $jasa = Jasa::with('kategori')->latest()->get();
+        $kategori = Kategori::all();
+    } catch (\Exception $e) {
+        \Log::error('Home route DB access failed: '.$e->getMessage());
+    }
 
     return view('home.index', compact('jasa', 'kategori'));
 })->name('home');
@@ -78,6 +88,10 @@ Route::get('/vendors/{jasa}', function (Jasa $jasa) {
     return view('home.vendor-detail', compact('jasa'));
 })->name('vendors.show');
 
+// Business registration request (user-facing)
+Route::get('/business-request/create', [BusinessRequestController::class, 'create'])->middleware('auth')->name('business-request.create');
+Route::post('/business-request', [BusinessRequestController::class, 'store'])->middleware('auth')->name('business-request.store');
+
 // Booking form (public)
 Route::get('/book/{jasa}', function (Jasa $jasa) {
     $jasa->load('kategori');
@@ -119,23 +133,46 @@ Route::post('/book', function (Request $request) {
         'status' => 'pending',
     ]);
 
-    // Build WhatsApp link to vendor contact for payment confirmation
+    // Build WhatsApp link to the vendor's contact for payment confirmation.
+    // Use the vendor number stored in jasa->kontak; if missing, fall back to the admin number.
+    $adminPhone = preg_replace('/[^0-9+]/', '', env('ADMIN_WHATSAPP', ''));
+    if (strpos($adminPhone, '+') === 0) {
+        $adminPhone = ltrim($adminPhone, '+');
+    } elseif (strpos($adminPhone, '0') === 0) {
+        // assume Indonesian numbers, convert leading 0 to 62
+        $adminPhone = '62'.substr($adminPhone, 1);
+    }
+
     $phone = preg_replace('/[^0-9+]/', '', $jasa->kontak ?? '');
     if (strpos($phone, '+') === 0) {
         $phone = ltrim($phone, '+');
     } elseif (strpos($phone, '0') === 0) {
-        // assume Indonesian numbers, convert leading 0 to 62
         $phone = '62'.substr($phone, 1);
     }
 
+    if (empty($phone)) {
+        $adminPhone = preg_replace('/[^0-9+]/', '', env('ADMIN_WHATSAPP', ''));
+        if (strpos($adminPhone, '+') === 0) {
+            $adminPhone = ltrim($adminPhone, '+');
+        } elseif (strpos($adminPhone, '0') === 0) {
+            $adminPhone = '62'.substr($adminPhone, 1);
+        }
+        $phone = $adminPhone;
+    }
+
     $message = "Halo {$jasa->nama_usaha},%0ASaya sudah melakukan booking dan ingin mengkonfirmasi pembayaran.%0A";
+    $message .= "Booking ID: BKG-" . str_pad($booking->id, 4, '0', STR_PAD_LEFT) . "%0A";
     $message .= "Nama: {$booking->full_name}%0A";
-    $message .= "Jasa: {$jasa->nama_usaha}%0A";
+    $message .= "Jasa: {$booking->service_name}%0A";
+    $message .= "Vendor: {$jasa->nama_usaha}%0A";
     $message .= "Tanggal: {$booking->date} {$booking->time}%0A";
-    $message .= "Total: Rp " . number_format($jasa->estimasi_harga,0,',','.') . "%0A";
+    $message .= "Lokasi: {$booking->city}%0A";
+    $message .= "Metode Pembayaran: " . ($booking->payment_method === 'cod' ? 'Bayar di Tempat' : 'Transfer Bank') . "%0A";
+    $message .= "Total: Rp " . number_format($booking->price,0,',','.') . "%0A";
     $message .= "Email: {$booking->email}%0A";
+    $message .= "Alamat: {$booking->address}%0A";
     $message .= "Catatan: " . ($booking->notes ?? '-') . "%0A";
-    $message .= "%0ASilakan konfirmasi di sini jika sudah menerima pembayaran.";
+    $message .= "%0ASilakan konfirmasi struk dan lanjutkan proses pesanan ini.";
 
     if (empty($phone)) {
         return redirect()->route('dashboard')->with('success', 'Booking berhasil dibuat. Silahkan check dashboard Anda.');
@@ -150,11 +187,15 @@ Route::post('/book', function (Request $request) {
 // =========================
 // DASHBOARD USER
 // =========================
-Route::get('/dashboard', function () {
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('user.dashboard');
+    })->name('dashboard');
 
-    return view('user.dashboard');
-
-})->middleware(['auth'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // =========================
 // DASHBOARD ADMIN
@@ -166,25 +207,34 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
         $jasa = Jasa::with('kategori')->get();
         $kategori = Kategori::all();
+        $pendingRequests = BusinessRequest::with('user','kategori')->where('status', 'pending')->get();
 
         $stats = [
             'totalJasa' => Jasa::count(),
             'totalKategori' => Kategori::count(),
+            'pendingRequests' => $pendingRequests->count(),
         ];
 
         return view('admin.dashboard', compact(
             'jasa',
             'kategori',
-            'stats'
+            'stats',
+            'pendingRequests'
         ));
 
-    });
+    })->name('admin.dashboard');
 
     // CRUD JASA
     Route::resource('jasa', JasaController::class);
 
     // CRUD KATEGORI
     Route::resource('kategori', KategoriController::class);
+
+    // Business requests management
+    Route::get('business-requests', [BusinessRequestController::class, 'index'])->name('admin.business-requests');
+    Route::post('business-requests/{id}/approve', [BusinessRequestController::class, 'approve'])->name('admin.business-requests.approve');
+    Route::post('business-requests/{id}/reject', [BusinessRequestController::class, 'reject'])->name('admin.business-requests.reject');
+    Route::get('business-requests/{id}', [BusinessRequestController::class, 'show'])->name('admin.business-requests.show');
 
 });
 

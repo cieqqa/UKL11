@@ -262,6 +262,26 @@
         }
 
         @media (max-width: 980px) {
+            .topbar .wrap {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
+            .menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .menu a,
+            .menu .pill {
+                flex: 0 1 auto;
+                min-width: 120px;
+                text-align: center;
+            }
+
             .hero-grid,
             .main-grid,
             .cards {

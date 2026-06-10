@@ -4,22 +4,26 @@
 @section('header', 'Pesanan Saya')
 
 @section('content')
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-            <p class="text-gray-600 text-sm font-semibold">Total Pesanan</p>
-            <p class="text-3xl font-bold text-gray-900">{{ $stats['total_bookings'] }}</p>
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-slate-900">
+            <p class="text-slate-900 text-sm font-semibold uppercase tracking-[0.12em]">Total Pesanan</p>
+            <p class="text-3xl font-bold text-slate-900">{{ $stats['total_bookings'] }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
-            <p class="text-gray-600 text-sm font-semibold">Pending</p>
-            <p class="text-3xl font-bold text-gray-900">{{ $stats['pending'] }}</p>
+            <p class="text-yellow-600 text-sm font-semibold uppercase tracking-[0.12em]">Pending</p>
+            <p class="text-3xl font-bold text-slate-900">{{ $stats['pending'] }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-600">
-            <p class="text-gray-600 text-sm font-semibold">Dikonfirmasi</p>
-            <p class="text-3xl font-bold text-gray-900">{{ $stats['confirmed'] }}</p>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <p class="text-blue-600 text-sm font-semibold uppercase tracking-[0.12em]">Dikonfirmasi</p>
+            <p class="text-3xl font-bold text-slate-900">{{ $stats['confirmed'] }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-            <p class="text-gray-600 text-sm font-semibold">Selesai</p>
-            <p class="text-3xl font-bold text-gray-900">{{ $stats['completed'] }}</p>
+            <p class="text-green-600 text-sm font-semibold uppercase tracking-[0.12em]">Selesai</p>
+            <p class="text-3xl font-bold text-slate-900">{{ $stats['completed'] }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+            <p class="text-red-600 text-sm font-semibold uppercase tracking-[0.12em]">Dibatalkan</p>
+            <p class="text-3xl font-bold text-slate-900">{{ $stats['cancelled'] }}</p>
         </div>
     </div>
 

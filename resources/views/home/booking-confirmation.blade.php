@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #edf2f7;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,23 +22,24 @@
         }
 
         .container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+            max-width: 560px;
             width: 100%;
-            padding: 40px;
+            padding: 36px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
         }
 
         .success-icon {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         .checkmark {
-            width: 80px;
-            height: 80px;
-            background: #10b981;
+            width: 70px;
+            height: 70px;
+            background: #2563eb;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -47,33 +48,34 @@
         }
 
         .checkmark svg {
-            width: 50px;
-            height: 50px;
+            width: 34px;
+            height: 34px;
             stroke: white;
-            stroke-width: 3;
+            stroke-width: 2.5;
             fill: none;
         }
 
         h1 {
-            font-size: 28px;
-            color: #1f2937;
-            margin-bottom: 12px;
+            font-size: 26px;
+            color: #102a43;
+            margin-bottom: 10px;
             text-align: center;
         }
 
         .subtitle {
-            color: #6b7280;
+            color: #475569;
             text-align: center;
-            font-size: 16px;
-            margin-bottom: 30px;
+            font-size: 15px;
+            margin-bottom: 26px;
+            line-height: 1.6;
         }
 
         .booking-details {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-            border-left: 4px solid #2563eb;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
         }
 
         .detail-item {
@@ -110,26 +112,26 @@
         }
 
         .info-box {
-            background: #fef3c7;
-            border: 1px solid #fcd34d;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 30px;
+            background: #eff6ff;
+            border: 1px solid rgba(59, 130, 246, 0.22);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 28px;
         }
 
         .info-box h3 {
-            color: #92400e;
-            font-size: 14px;
-            margin-bottom: 8px;
+            color: #1d4ed8;
+            font-size: 15px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .info-box p {
-            color: #78350f;
-            font-size: 14px;
-            line-height: 1.6;
+            color: #334155;
+            font-size: 15px;
+            line-height: 1.75;
         }
 
         .info-box svg {
@@ -145,38 +147,39 @@
         }
 
         .btn {
-            padding: 14px 24px;
+            padding: 14px 22px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-primary {
             background: #2563eb;
             color: white;
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
         }
 
         .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
         }
 
         .btn-secondary {
-            background: #e5e7eb;
-            color: #1f2937;
+            background: #f8fafc;
+            color: #334155;
+            border: 1px solid rgba(148, 163, 184, 0.35);
         }
 
         .btn-secondary:hover {
-            background: #d1d5db;
+            background: #e2e8f0;
         }
 
         .btn svg {
@@ -226,8 +229,8 @@
         </div>
 
         <!-- Title -->
-        <h1>Booking Created Successfully!</h1>
-        <p class="subtitle">Your booking request has been submitted. Please confirm payment via WhatsApp.</p>
+        <h1>Booking Berhasil Dibuat!</h1>
+        <p class="subtitle">Permintaan booking Anda telah dikirim. Silakan konfirmasi pembayaran melalui WhatsApp kepada vendor.</p>
 
         <!-- Booking Details -->
         <div class="booking-details">
@@ -252,6 +255,10 @@
                 <span class="detail-value">{{ $booking->city }}</span>
             </div>
             <div class="detail-item">
+                <span class="detail-label">Payment Method</span>
+                <span class="detail-value">{{ $booking->payment_method === 'cod' ? 'Bayar di Tempat' : 'Transfer Bank' }}</span>
+            </div>
+            <div class="detail-item">
                 <span class="detail-label">Total Price</span>
                 <span class="detail-value price">Rp {{ number_format($booking->price, 0, ',', '.') }}</span>
             </div>
@@ -261,11 +268,11 @@
         <div class="info-box">
             <h3>
                 <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-11h2v5h-2V9zm0 6h2v2h-2v-2z"/>
                 </svg>
-                What's Next?
+                Langkah Selanjutnya
             </h3>
-            <p>Click the WhatsApp button below to confirm payment with the vendor. They will verify your payment and proceed with the service.</p>
+            <p>Tekan tombol WhatsApp untuk menghubungi vendor. Setelah pembayaran dikonfirmasi, vendor akan melanjutkan proses layanan Anda.</p>
         </div>
 
         <!-- Buttons -->
@@ -277,16 +284,16 @@
                 Confirm via WhatsApp
             </a>
             <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9 12l2 2 4-4m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l8.5-8.5a2 2 0 012.828 0L21 12m-2 0v8a2 2 0 01-2 2H7a2 2 0 01-2-2v-8" />
                 </svg>
-                Go to Dashboard
+                Kembali ke Dashboard
             </a>
         </div>
 
         <!-- Footer -->
         <div class="footer-text">
-            Your booking is now visible in <a href="{{ route('dashboard') }}">your dashboard</a>. The vendor will confirm payment status shortly.
+            Booking Anda sudah tercatat di <a href="{{ route('dashboard') }}">dashboard</a>. Vendor akan segera mengonfirmasi status pembayaran.
         </div>
     </div>
 </body>

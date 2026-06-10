@@ -7,13 +7,19 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Jasa;
 use App\Models\Kategori;
 use App\Models\User;
+use App\Models\BusinessRequest;
 
 class JasaController extends Controller
 {
     public function index()
     {
         $jasa = Jasa::with('kategori')->get();
-        return view('jasa.index', compact('jasa'));
+        $stats = [
+            'totalJasa' => Jasa::count(),
+            'totalKategori' => Kategori::count(),
+            'pendingRequests' => BusinessRequest::where('status', 'pending')->count(),
+        ];
+        return view('jasa.index', compact('jasa', 'stats'));
     }
 
 

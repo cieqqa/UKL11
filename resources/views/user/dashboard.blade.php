@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>My Dashboard</title>
 
     <style>
@@ -249,6 +250,59 @@
             gap: 8px;
         }
 
+        .booking-expand-toggle {
+            margin-top: 14px;
+            width: 100%;
+            justify-content: center;
+            background: #eef2ff;
+            color: #1d4ed8;
+        }
+
+        .booking-expand-toggle:hover {
+            background: #e0e7ff;
+        }
+
+        .booking-expand {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #d1d5db;
+        }
+
+        .booking-expand.active {
+            display: block;
+        }
+
+        .booking-expand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px 20px;
+        }
+
+        .booking-expand-item {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .booking-expand-label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+        }
+
+        .booking-expand-value {
+            font-size: 14px;
+            color: #111827;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
         .btn {
             padding: 10px 16px;
             border: none;
@@ -309,6 +363,16 @@
         }
 
         @media (max-width: 768px) {
+            .hero {
+                padding: 40px 16px;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+
             .booking-item {
                 flex-direction: column;
             }
@@ -324,11 +388,61 @@
             .tabs {
                 overflow-x: auto;
             }
+
+            .booking-expand-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
 </head>
 <body>
+    @php
+        $normalizeWhatsAppNumber = function (?string $number): ?string {
+            $digits = preg_replace('/[^0-9]/', '', (string) $number);
+
+            if ($digits === '') {
+                return null;
+            }
+
+            if (str_starts_with($digits, '0')) {
+                $digits = '62'.substr($digits, 1);
+            } elseif (str_starts_with($digits, '8')) {
+                $digits = '62'.$digits;
+            }
+
+            return $digits;
+        };
+
+        $buildWhatsAppUrl = function ($booking) use ($normalizeWhatsAppNumber) {
+            $phone = $normalizeWhatsAppNumber(optional($booking->jasa)->kontak);
+
+            if (!$phone) {
+                return null;
+            }
+
+            $bookingCode = 'BKG-'.str_pad($booking->id, 4, '0', STR_PAD_LEFT);
+            $vendorName = optional($booking->jasa)->nama_usaha ?? '-';
+
+            $message = "Halo {$vendorName}, saya ingin menghubungi terkait booking {$bookingCode}. "
+                . "Nama: {$booking->full_name}. Jasa: {$booking->service_name}. "
+                . "Tanggal: {$booking->date} {$booking->time}.";
+
+            return 'https://wa.me/'.$phone.'?text='.rawurlencode($message);
+        };
+
+        $activeBookings = Auth::user()->bookings()
+            ->with('jasa')
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $historyBookings = Auth::user()->bookings()
+            ->with('jasa')
+            ->whereIn('status', ['completed', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    @endphp
 
     <!-- HERO -->
     <div class="hero">
@@ -395,19 +509,15 @@
         <!-- TABS -->
         <div class="tabs-container">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('active')">Active Bookings</button>
-                <button class="tab" onclick="showTab('history')">Booking History</button>
-                <button class="tab" onclick="showTab('profile')">Profile</button>
+                <button class="tab active" onclick="showTab('active', this)">Active Bookings</button>
+                <button class="tab" onclick="showTab('history', this)">Booking History</button>
             </div>
 
             <!-- ACTIVE BOOKINGS TAB -->
             <div id="active" class="tab-content active">
-                @php
-                    $activeBookings = Auth::user()->bookings()->with('jasa')->whereIn('status', ['pending', 'confirmed'])->orderBy('created_at', 'desc')->get();
-                @endphp
-
                 @if($activeBookings->count() > 0)
                     @foreach($activeBookings as $booking)
+                        @php $waUrl = $buildWhatsAppUrl($booking); @endphp
                         <div class="booking-item">
                             <div class="booking-info">
                                 <div class="booking-header">
@@ -453,12 +563,21 @@
                             </div>
                             <div>
                                 <div class="booking-actions">
-                                    <button class="btn btn-chat">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                        </svg>
-                                        Chat with Vendor
-                                    </button>
+                                    @if($waUrl)
+                                        <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-chat">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                            </svg>
+                                            Chat with Vendor
+                                        </a>
+                                    @else
+                                        <span class="btn btn-chat" aria-disabled="true" style="opacity: .65; cursor: not-allowed;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                            </svg>
+                                            Chat with Vendor
+                                        </span>
+                                    @endif
                                     <a href="{{ route('vendors.show', $booking->jasa_id) }}" class="btn btn-vendor">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -487,23 +606,23 @@
 
             <!-- BOOKING HISTORY TAB -->
             <div id="history" class="tab-content">
-                @php
-                    $historyBookings = Auth::user()->bookings()->with('jasa')->whereIn('status', ['completed', 'cancelled'])->orderBy('created_at', 'desc')->get();
-                @endphp
-
                 @if($historyBookings->count() > 0)
                     @foreach($historyBookings as $booking)
+                        @php
+                            $waUrl = $buildWhatsAppUrl($booking);
+                            $detailId = 'booking-detail-'.$booking->id;
+                        @endphp
                         <div class="booking-item">
                             <div class="booking-info">
                                 <div class="booking-header">
                                     <span class="booking-id">BKG-{{ str_pad($booking->id, 4, '0', STR_PAD_LEFT) }}</span>
-                                @if($booking->status === 'completed')
-                                    <span class="booking-status status-completed">Completed</span>
-                                @elseif($booking->status === 'cancelled')
-                                    <span class="booking-status status-cancelled">Cancelled</span>
-                                @else
-                                    <span class="booking-status status-completed">{{ ucfirst($booking->status) }}</span>
-                                @endif
+                                    @if($booking->status === 'completed')
+                                        <span class="booking-status status-completed">Completed</span>
+                                    @elseif($booking->status === 'cancelled')
+                                        <span class="booking-status status-cancelled">Cancelled</span>
+                                    @else
+                                        <span class="booking-status status-completed">{{ ucfirst($booking->status) }}</span>
+                                    @endif
                                 </div>
                                 <div class="booking-service">{{ $booking->service_name }}</div>
                                 <div class="booking-vendor">{{ $booking->jasa->nama_usaha ?? '-' }}</div>
@@ -534,9 +653,54 @@
                                         <div class="progress-fill" style="width: 100%"></div>
                                     </div>
                                 </div>
+
+                                <div id="{{ $detailId }}" class="booking-expand">
+                                    <div class="booking-expand-grid">
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Nama Pemesan</span>
+                                            <div class="booking-expand-value">{{ $booking->full_name }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Email</span>
+                                            <div class="booking-expand-value">{{ $booking->email }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">No. HP</span>
+                                            <div class="booking-expand-value">{{ $booking->phone }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Kota</span>
+                                            <div class="booking-expand-value">{{ $booking->city }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Alamat</span>
+                                            <div class="booking-expand-value">{{ $booking->address }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Metode Pembayaran</span>
+                                            <div class="booking-expand-value">{{ $booking->payment_method === 'cod' ? 'Bayar di Tempat' : 'Transfer Bank' }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Catatan</span>
+                                            <div class="booking-expand-value">{{ $booking->notes ?: '-' }}</div>
+                                        </div>
+                                        <div class="booking-expand-item">
+                                            <span class="booking-expand-label">Harga</span>
+                                            <div class="booking-expand-value">Rp {{ number_format($booking->price, 0, ',', '.') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <div class="booking-actions">
+                                    @if($waUrl)
+                                        <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-chat">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                            </svg>
+                                            Chat with Vendor
+                                        </a>
+                                    @endif
                                     <a href="{{ route('vendors.show', $booking->jasa_id) }}" class="btn btn-vendor">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -545,6 +709,12 @@
                                         </svg>
                                         View Vendor
                                     </a>
+                                    <button type="button" class="btn booking-expand-toggle" onclick="toggleBookingDetails('{{ $detailId }}', this)">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"/>
+                                        </svg>
+                                        Lihat Detail Pesanan
+                                    </button>
                                 </div>
                                 <div class="price">Rp {{ number_format($booking->price, 0, ',', '.') }}</div>
                             </div>
@@ -562,37 +732,46 @@
                     </div>
                 @endif
             </div>
-
-            <!-- PROFILE TAB -->
-            <div id="profile" class="tab-content">
-                <div style="max-width: 500px;">
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Name</label>
-                        <p style="color: #6b7280;">{{ Auth::user()->name }}</p>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Email</label>
-                        <p style="color: #6b7280;">{{ Auth::user()->email }}</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
+
     <script>
-        function showTab(tabName) {
-            // Hide all tabs
+        function showTab(tabName, button) {
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => tab.classList.remove('active'));
 
             const buttons = document.querySelectorAll('.tab');
             buttons.forEach(btn => btn.classList.remove('active'));
 
-            // Show selected tab
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            const targetTab = document.getElementById(tabName);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            if (button) {
+                button.classList.add('active');
+            }
         }
+
+        function toggleBookingDetails(detailId, button) {
+            const detail = document.getElementById(detailId);
+
+            if (!detail) {
+                return;
+            }
+
+            const isVisible = detail.classList.toggle('active');
+
+            if (button) {
+                button.innerHTML = isVisible
+                    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>Lihat Lebih Sedikit'
+                    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>Lihat Detail Pesanan';
+            }
+        }
+
     </script>
 
+ </body>
+</html>
 </body>
 </html>

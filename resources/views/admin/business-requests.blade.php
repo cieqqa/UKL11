@@ -212,13 +212,13 @@
             border-color: #dbe4f0;
         }
 
-        .kategori-table {
+        .request-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0 14px;
         }
 
-        .kategori-table thead th {
+        .request-table thead th {
             padding: 18px 20px;
             text-align: left;
             font-size: 13px;
@@ -228,23 +228,48 @@
             border-bottom: 1px solid rgba(148, 163, 184, .18);
         }
 
-        .kategori-table tbody tr {
+        .request-table tbody tr {
             background: #fff;
             border-radius: 20px;
             box-shadow: 0 10px 24px rgba(15, 23, 42, .06);
             overflow: hidden;
         }
 
-        .kategori-table tbody td {
+        .request-table tbody td {
             padding: 18px 20px;
             color: #334155;
             vertical-align: top;
         }
 
-        .kategori-name {
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
             font-weight: 700;
-            color: #0f172a;
-            font-size: 15px;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .request-meta {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         .actions-wrap {
@@ -254,57 +279,28 @@
             justify-content: flex-end;
         }
 
-        .btn-action {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: all .18s ease;
-        }
-
-        .btn-edit {
-            background: #fbbf24;
-            color: #1f2937;
-        }
-
-        .btn-edit:hover {
-            background: #f59e0b;
-        }
-
-        .btn-delete {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-
         @media (max-width: 860px) {
-            .kategori-table thead {
+            .request-table thead {
                 display: none;
             }
 
-            .kategori-table,
-            .kategori-table tbody,
-            .kategori-table tr,
-            .kategori-table td {
+            .request-table,
+            .request-table tbody,
+            .request-table tr,
+            .request-table td {
                 display: block;
                 width: 100%;
             }
 
-            .kategori-table tr {
+            .request-table tr {
                 margin-bottom: 14px;
             }
 
-            .kategori-table td {
+            .request-table td {
                 padding: 16px 18px;
             }
 
-            .kategori-table td::before {
+            .request-table td::before {
                 content: attr(data-label);
                 display: block;
                 font-size: 12px;
@@ -358,8 +354,8 @@
                 padding: 14px 16px;
             }
 
-            .kategori-table thead th,
-            .kategori-table tbody td {
+            .request-table thead th,
+            .request-table tbody td {
                 padding: 14px;
             }
         }
@@ -375,9 +371,9 @@
 
             <nav class="nav-list">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
-                <a href="{{ route('admin.business-requests') }}" class="nav-link">Permintaan PT/CV</a>
+                <a href="{{ route('admin.business-requests') }}" class="nav-link active">Permintaan PT/CV</a>
                 <a href="{{ route('jasa.index') }}" class="nav-link">Data Jasa</a>
-                <a href="{{ route('kategori.index') }}" class="nav-link active">Data Kategori</a>
+                <a href="{{ route('kategori.index') }}" class="nav-link">Data Kategori</a>
                 <a href="{{ route('home') }}" class="nav-link">Beranda</a>
             </nav>
 
@@ -393,44 +389,69 @@
     <div class="admin-page">
         <div class="page-header">
             <div>
-                <h1 class="page-title">Data Kategori</h1>
-                <p class="page-description">Kelola kategori layanan dengan mudah. Tambah kategori baru atau edit yang sudah ada untuk memastikan data tetap terorganisir.</p>
+                <h1 class="page-title">Permintaan Pendaftaran PT / CV</h1>
+                <p class="page-description">Lihat seluruh request admin dengan tampilan yang lebih jelas dan mudah dikelola. Klik detail untuk memproses permintaan satu per satu.</p>
             </div>
             <div class="page-actions">
                 <a href="{{ route('admin.dashboard') }}" class="btn-back">Kembali ke Dashboard</a>
-                <a href="{{ route('kategori.create') }}" class="btn-primary">+ Tambah Kategori</a>
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="card" style="margin-bottom:20px;">
+                <div class="card-body" style="padding:18px 24px; color:#14532d; background:#ecfdf5; border-radius:18px;">{{ session('success') }}</div>
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-body">
-                <table class="kategori-table">
+                <table class="request-table">
                     <thead>
                         <tr>
-                            <th>Nama Kategori</th>
+                            <th>ID</th>
+                            <th>Usaha</th>
+                            <th>PT/CV</th>
+                            <th>Pemohon</th>
+                            <th>Kota</th>
+                            <th>Status</th>
                             <th style="text-align:right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($kategori as $k)
+                        @forelse($requests as $r)
                             <tr>
-                                <td data-label="Nama Kategori">
-                                    <div class="kategori-name">{{ $k->nama_kategori }}</div>
+                                <td data-label="ID">#{{ $r->id }}<div class="request-meta">{{ $r->created_at->format('Y-m-d H:i') }}</div></td>
+                                <td data-label="Usaha">
+                                    <strong>{{ $r->nama_usaha }}</strong>
+                                    <div class="request-meta">{{ Str::limit($r->deskripsi, 80) }}</div>
+                                </td>
+                                <td data-label="PT/CV">{{ $r->company_email ?? '-' }}</td>
+                                <td data-label="Pemohon">
+                                    {{ $r->company_type ?? '-' }}
+                                    <div class="request-meta">{{ $r->user->name }} • {{ $r->user->email }}</div>
+                                </td>
+                                <td data-label="Kota">
+                                    {{ $r->kota ?? '-' }}
+                                    <div class="request-meta">{{ $r->kontak ?? '-' }}</div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="status-pill status-{{ $r->status }}">{{ ucfirst($r->status) }}</span>
                                 </td>
                                 <td data-label="Aksi">
                                     <div class="actions-wrap">
-                                        <a href="{{ route('kategori.edit', $k->id) }}" class="btn-action btn-edit">Edit</a>
-                                        <form method="POST" action="{{ route('kategori.destroy', $k->id) }}" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-action btn-delete" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                                        </form>
+                                        <a href="{{ route('admin.business-requests.show', $r->id) }}" class="btn btn-secondary">Detail</a>
+                                        @if($r->status === 'pending')
+                                            <form method="POST" action="{{ route('admin.business-requests.approve', $r->id) }}">@csrf<button type="submit" class="btn btn-primary">Approve</button></form>
+                                            <form method="POST" action="{{ route('admin.business-requests.reject', $r->id) }}">@csrf<button type="submit" class="btn btn-secondary">Reject</button></form>
+                                        @else
+                                            <span class="request-meta">Processed</span>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="2" style="text-align:center; padding:24px; color:#64748b;">Belum ada kategori.</td>
+                                <td colspan="7" class="table-empty">Tidak ada permintaan pendaftaran.</td>
                             </tr>
                         @endforelse
                     </tbody>

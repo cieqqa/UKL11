@@ -40,6 +40,7 @@ class VendorController extends Controller
             'pending' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'pending')->count(),
             'confirmed' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'confirmed')->count(),
             'completed' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'completed')->count(),
+            'cancelled' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'cancelled')->count(),
             'total_jasa' => count($jasa_ids),
         ];
 
@@ -65,6 +66,7 @@ class VendorController extends Controller
             'pending' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'pending')->count(),
             'confirmed' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'confirmed')->count(),
             'completed' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'completed')->count(),
+            'cancelled' => Booking::whereIn('jasa_id', $jasa_ids)->where('status', 'cancelled')->count(),
         ];
 
         return view('vendor.bookings', compact('bookings', 'stats'));

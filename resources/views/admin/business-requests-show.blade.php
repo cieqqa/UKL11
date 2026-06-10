@@ -164,18 +164,6 @@
             gap: 12px;
         }
 
-        .card {
-            background: #fff;
-            border-radius: 28px;
-            border: 1px solid rgba(148, 163, 184, .14);
-            box-shadow: 0 24px 60px rgba(15, 23, 42, .05);
-            overflow: hidden;
-        }
-
-        .card-body {
-            padding: 28px;
-        }
-
         .btn-back,
         .btn-primary,
         .btn-secondary {
@@ -212,109 +200,114 @@
             border-color: #dbe4f0;
         }
 
-        .kategori-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 14px;
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 24px;
         }
 
-        .kategori-table thead th {
-            padding: 18px 20px;
-            text-align: left;
+        .detail-card,
+        .action-card {
+            background: #fff;
+            border-radius: 28px;
+            border: 1px solid rgba(148, 163, 184, .14);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .05);
+            padding: 28px;
+        }
+
+        .detail-card h3 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            color: #0f172a;
+        }
+
+        .detail-card p {
+            margin: 0 0 18px;
+            color: #475569;
+            line-height: 1.75;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+
+        .detail-table td {
+            padding: 14px 0;
+            vertical-align: top;
+            color: #334155;
+        }
+
+        .detail-label {
+            width: 140px;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 9999px;
             font-size: 13px;
             font-weight: 700;
-            color: #1f2937;
-            background: #eef2ff;
-            border-bottom: 1px solid rgba(148, 163, 184, .18);
         }
 
-        .kategori-table tbody tr {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, .06);
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-card h4 {
+            margin: 0 0 16px;
+            font-size: 18px;
+            color: #0f172a;
+        }
+
+        .action-card p {
+            color: #475569;
+            line-height: 1.75;
+            margin-bottom: 20px;
+        }
+
+        .action-card form,
+        .action-card a {
+            width: 100%;
+        }
+
+        .action-card a {
+            display: inline-flex;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .photo-wrap {
+            margin-top: 24px;
+            border-radius: 24px;
             overflow: hidden;
         }
 
-        .kategori-table tbody td {
-            padding: 18px 20px;
-            color: #334155;
-            vertical-align: top;
+        .photo-wrap img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            max-height: 320px;
         }
 
-        .kategori-name {
-            font-weight: 700;
-            color: #0f172a;
-            font-size: 15px;
-        }
-
-        .actions-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: flex-end;
-        }
-
-        .btn-action {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: all .18s ease;
-        }
-
-        .btn-edit {
-            background: #fbbf24;
-            color: #1f2937;
-        }
-
-        .btn-edit:hover {
-            background: #f59e0b;
-        }
-
-        .btn-delete {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-
-        @media (max-width: 860px) {
-            .kategori-table thead {
-                display: none;
-            }
-
-            .kategori-table,
-            .kategori-table tbody,
-            .kategori-table tr,
-            .kategori-table td {
-                display: block;
-                width: 100%;
-            }
-
-            .kategori-table tr {
-                margin-bottom: 14px;
-            }
-
-            .kategori-table td {
-                padding: 16px 18px;
-            }
-
-            .kategori-table td::before {
-                content: attr(data-label);
-                display: block;
-                font-size: 12px;
-                font-weight: 700;
-                color: #475569;
-                margin-bottom: 6px;
-            }
-
-            .actions-wrap {
-                justify-content: flex-start;
+        @media (max-width: 900px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -346,7 +339,7 @@
 
         @media (max-width: 760px) {
             .sidebar,
-            .card {
+            .detail-card {
                 padding: 20px;
             }
 
@@ -356,11 +349,6 @@
 
             .nav-link {
                 padding: 14px 16px;
-            }
-
-            .kategori-table thead th,
-            .kategori-table tbody td {
-                padding: 14px;
             }
         }
     </style>
@@ -375,9 +363,9 @@
 
             <nav class="nav-list">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
-                <a href="{{ route('admin.business-requests') }}" class="nav-link">Permintaan PT/CV</a>
+                <a href="{{ route('admin.business-requests') }}" class="nav-link active">Permintaan PT/CV</a>
                 <a href="{{ route('jasa.index') }}" class="nav-link">Data Jasa</a>
-                <a href="{{ route('kategori.index') }}" class="nav-link active">Data Kategori</a>
+                <a href="{{ route('kategori.index') }}" class="nav-link">Data Kategori</a>
                 <a href="{{ route('home') }}" class="nav-link">Beranda</a>
             </nav>
 
@@ -393,49 +381,85 @@
     <div class="admin-page">
         <div class="page-header">
             <div>
-                <h1 class="page-title">Data Kategori</h1>
-                <p class="page-description">Kelola kategori layanan dengan mudah. Tambah kategori baru atau edit yang sudah ada untuk memastikan data tetap terorganisir.</p>
+                <h1 class="page-title">Detail Permintaan Pendaftaran</h1>
+                <p class="page-description">Lihat informasi detail permintaan PT/CV dan lakukan keputusan approve atau reject langsung dari halaman ini.</p>
             </div>
             <div class="page-actions">
-                <a href="{{ route('admin.dashboard') }}" class="btn-back">Kembali ke Dashboard</a>
-                <a href="{{ route('kategori.create') }}" class="btn-primary">+ Tambah Kategori</a>
+                <a href="{{ route('admin.business-requests') }}" class="btn-back">Kembali ke Daftar Request</a>
+                <a href="{{ route('admin.dashboard') }}" class="btn-secondary">Dashboard Admin</a>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-body">
-                <table class="kategori-table">
-                    <thead>
-                        <tr>
-                            <th>Nama Kategori</th>
-                            <th style="text-align:right;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($kategori as $k)
-                            <tr>
-                                <td data-label="Nama Kategori">
-                                    <div class="kategori-name">{{ $k->nama_kategori }}</div>
-                                </td>
-                                <td data-label="Aksi">
-                                    <div class="actions-wrap">
-                                        <a href="{{ route('kategori.edit', $k->id) }}" class="btn-action btn-edit">Edit</a>
-                                        <form method="POST" action="{{ route('kategori.destroy', $k->id) }}" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-action btn-delete" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="2" style="text-align:center; padding:24px; color:#64748b;">Belum ada kategori.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
+        <div class="detail-grid">
+            <section class="detail-card">
+                <h3>{{ $req->nama_usaha }} <small style="color:#64748b; font-size:14px;">#{{ $req->id }}</small></h3>
+                <p>{{ $req->deskripsi ?? '-' }}</p>
+
+                <table class="detail-table">
+                    <tr>
+                        <td class="detail-label">Tipe Perusahaan</td>
+                        <td>{{ $req->company_type ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Email PT/CV</td>
+                        <td>{{ $req->company_email ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Estimasi Harga</td>
+                        <td>{{ $req->estimasi_harga ? 'Rp '.number_format($req->estimasi_harga,0,',','.') : '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Kategori</td>
+                        <td>{{ $req->kategori->nama_kategori ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Alamat</td>
+                        <td>{{ $req->alamat ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Kota</td>
+                        <td>{{ $req->kota ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Kontak</td>
+                        <td>{{ $req->kontak ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Pemohon</td>
+                        <td>{{ $req->user->name }} • {{ $req->user->email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Diajukan</td>
+                        <td>{{ $req->created_at->format('Y-m-d H:i') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Status</td>
+                        <td><span class="status-pill status-{{ $req->status }}">{{ ucfirst($req->status) }}</span></td>
+                    </tr>
                 </table>
-            </div>
+
+                @if($req->foto)
+                    <div class="photo-wrap">
+                        <img src="{{ asset($req->foto) }}" alt="Foto Usaha">
+                    </div>
+                @endif
+            </section>
+
+            <aside class="action-card">
+                <h4>Aksi Admin</h4>
+                @if($req->status === 'pending')
+                    <form method="POST" action="{{ route('admin.business-requests.approve', $req->id) }}" style="margin-bottom:14px;">
+                        @csrf
+                        <button class="btn btn-primary" type="submit">Approve & Buat Akun Vendor</button>
+                    </form>
+                    <form method="POST" action="{{ route('admin.business-requests.reject', $req->id) }}">
+                        @csrf
+                        <button class="btn btn-secondary" type="submit">Reject</button>
+                    </form>
+                @else
+                    <p>Permintaan ini telah diproses pada {{ $req->updated_at->format('Y-m-d H:i') }}. Tidak ada aksi lebih lanjut yang diperlukan.</p>
+                @endif
+            </aside>
         </div>
     </div>
         </main>

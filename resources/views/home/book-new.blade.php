@@ -13,10 +13,8 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div class="flex items-center justify-between">
                     <a href="{{ route('home') }}" class="flex items-center gap-2">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        <span class="text-lg font-bold text-gray-900">Klik n Clean</span>
+                        <div class="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-500 text-base font-bold text-white shadow-[0_8px_18px_rgba(59,130,246,0.35)]">K</div>
+                        <span class="text-lg font-bold text-gray-900 tracking-tight">Klik n Clean</span>
                     </a>
                     <div class="text-sm text-gray-600">Pemesanan Layanan</div>
                 </div>
@@ -189,11 +187,8 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="flex justify-between mt-8 pt-8 border-t border-gray-200">
-                            <button type="button" id="prevBtn" class="hidden px-6 py-3 rounded-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition">
-                                ← Kembali
-                            </button>
-                            <div class="flex gap-4 ml-auto">
+                        <div class="flex items-center justify-between mt-8 pt-8 border-t border-gray-200">
+                            <div class="flex gap-4">
                                 <button type="button" id="nextBtn" class="px-6 py-3 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition">
                                     Lanjut →
                                 </button>
@@ -341,7 +336,6 @@
             const form = document.getElementById('bookingForm');
             const steps = document.querySelectorAll('.step-item');
             const panels = document.querySelectorAll('.step-panel');
-            const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             const submitBtn = document.getElementById('submitBtn');
             
@@ -359,9 +353,12 @@
                 });
 
                 // Update buttons
-                prevBtn.classList.toggle('hidden', currentStep === 1);
-                nextBtn.classList.toggle('hidden', currentStep === 4);
-                submitBtn.classList.toggle('hidden', currentStep !== 4);
+                if (nextBtn) {
+                    nextBtn.classList.toggle('hidden', currentStep === 4);
+                }
+                if (submitBtn) {
+                    submitBtn.classList.toggle('hidden', currentStep !== 4);
+                }
             }
 
             function validateStep(step) {
@@ -382,14 +379,6 @@
                     currentStep++;
                     updateUI();
                     updateSummary();
-                }
-            });
-
-            prevBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentStep > 1) {
-                    currentStep--;
-                    updateUI();
                 }
             });
 
